@@ -7,6 +7,6 @@ export class PostsController {
 
   @Get()
   findAll(): string {
-    return this.postsService.getAll();
+    return this.postsService.findAll();
   }
 }
