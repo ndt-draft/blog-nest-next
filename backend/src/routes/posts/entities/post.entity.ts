@@ -12,7 +12,10 @@ export class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: 255,
+  })
   title: string;
 
   @Column({ type: 'int', array: true, default: [] })
