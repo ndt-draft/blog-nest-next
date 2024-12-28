@@ -21,6 +21,9 @@ export class Post {
   @Column({ type: 'int', array: true, default: [] })
   categories: number[];
 
+  @Column({ type: 'int' })
+  user_id: number;
+
   @ManyToOne(() => User, (user) => user.posts)
   @JoinColumn({ name: 'user_id' })
   user: User;
