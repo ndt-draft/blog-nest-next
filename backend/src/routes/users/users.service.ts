@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
@@ -12,13 +13,26 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
+    const foundUser = await this.userRepository.findOne({
+      where: {
+        email: createUserDto.email,
+      },
+    });
+    if (foundUser) {
+      throw new NotFoundException(
+        `User with email ${createUserDto.email} already exists`,
+      );
+    }
+
     const user = this.userRepository.create(createUserDto);
-    return this.userRepository.save(user);
+    await this.userRepository.save(user);
+    return plainToInstance(User, user);
   }
 
-  findAll() {
-    return this.userRepository.find();
+  async findAll(): Promise<User[]> {
+    const users = await this.userRepository.find();
+    return plainToInstance(User, users);
   }
 
   async findOne(id: number): Promise<User> {
@@ -30,7 +44,7 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-    return user;
+    return plainToInstance(User, user);
   }
 
   async findByEmail(email: string): Promise<User> {
