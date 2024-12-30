@@ -1,4 +1,4 @@
-import { Body, Injectable, NotFoundException } from '@nestjs/common';
+import { Body, Injectable, NotFoundException, Request } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { Post } from './entities/post.entity';
@@ -22,14 +22,13 @@ export class PostsService {
 
   async create(
     @Body() createPostDto: CreatePostDto,
+    @Request() req,
   ): Promise<CreatePostResponseDto> {
     const user = await this.userRepository.findOneBy({
-      id: createPostDto.user_id,
+      id: req.user.id,
     });
     if (!user) {
-      throw new NotFoundException(
-        `User with ID ${createPostDto.user_id} not found`,
-      );
+      throw new NotFoundException(`User with ID ${req.user.id} not found`);
     }
     const post = this.postRepository.create({
       ...createPostDto,
