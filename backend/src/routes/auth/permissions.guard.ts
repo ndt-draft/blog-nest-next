@@ -5,7 +5,6 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { UsersService } from '../users/users.service';
 
 const PERMISSIONS = {
   admin: ['CREATE_USER', 'CREATE_POST'],
@@ -15,12 +14,9 @@ const PERMISSIONS = {
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
-  constructor(
-    private reflector: Reflector,
-    private usersService: UsersService,
-  ) {}
+  constructor(private reflector: Reflector) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  canActivate(context: ExecutionContext): boolean {
     const requiredPermissions = this.reflector.get<string[]>(
       'permissions',
       context.getHandler(),
@@ -32,9 +28,7 @@ export class PermissionsGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
 
-    const user = await this.usersService.findOne(request.user.id);
-
-    const userPermissions = PERMISSIONS[user.role] || []; // Assume user.permissions is populated by JwtAuthGuard or another mechanism
+    const userPermissions = PERMISSIONS[request.user.role] || []; // Assume user.permissions is populated by JwtAuthGuard or another mechanism
     const hasPermission = requiredPermissions.every((permission) =>
       userPermissions.includes(permission),
     );
