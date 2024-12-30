@@ -5,6 +5,8 @@ import { UsersModule } from './routes/users/users.module';
 import { AuthModule } from './routes/auth/auth.module';
 import { PostsModule } from './routes/posts/posts.module';
 import { CategoriesModule } from './routes/categories/categories.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './routes/auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -15,6 +17,11 @@ import { CategoriesModule } from './routes/categories/categories.module';
     CategoriesModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard, // Enable authentication globally
+    },
+  ],
 })
 export class AppModule {}
