@@ -7,11 +7,14 @@ import {
   Patch,
   Post,
   Request,
+  UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Public } from '../auth/jwt-auth.guard';
+import { PermissionsGuard } from '../auth/permissions.guard';
+import { Permissions } from '../auth/permissions.decorator';
 
 @Controller('posts')
 export class PostsController {
@@ -24,6 +27,8 @@ export class PostsController {
   }
 
   @Post()
+  @UseGuards(PermissionsGuard)
+  @Permissions('CREATE_POST')
   create(@Body() createPostDto: CreatePostDto, @Request() req) {
     return this.postsService.create(createPostDto, req);
   }
