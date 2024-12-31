@@ -11,7 +11,11 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PermissionsGuard } from '../auth/permissions.guard';
+import { CanCreateUser } from '../auth/permissions.decorator';
 
+@UseGuards(PermissionsGuard)
+@CanCreateUser()
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

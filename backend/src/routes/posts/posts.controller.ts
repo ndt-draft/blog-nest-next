@@ -14,7 +14,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Public } from '../auth/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/permissions.guard';
-import { Permissions } from '../auth/permissions.decorator';
+import { CanCreatePost } from '../auth/permissions.decorator';
 
 @Controller('posts')
 export class PostsController {
@@ -28,7 +28,7 @@ export class PostsController {
 
   @Post()
   @UseGuards(PermissionsGuard)
-  @Permissions('CREATE_POST')
+  @CanCreatePost()
   create(@Body() createPostDto: CreatePostDto, @Request() req) {
     return this.postsService.create(createPostDto, req);
   }
@@ -40,11 +40,15 @@ export class PostsController {
   }
 
   @Patch(':id')
+  @UseGuards(PermissionsGuard)
+  @CanCreatePost()
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postsService.update(+id, updatePostDto);
   }
 
   @Delete(':id')
+  @UseGuards(PermissionsGuard)
+  @CanCreatePost()
   remove(@Param('id') id: string) {
     return this.postsService.remove(+id);
   }

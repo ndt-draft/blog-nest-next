@@ -5,10 +5,13 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { permissions } from './constants';
+
+const { CREATE_USER, CREATE_POST } = permissions;
 
 const PERMISSIONS = {
-  admin: ['CREATE_USER', 'CREATE_POST'],
-  author: ['CREATE_POST'],
+  admin: [CREATE_USER, CREATE_POST],
+  author: [CREATE_POST],
   user: [],
 };
 
@@ -17,10 +20,12 @@ export class PermissionsGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredPermissions = this.reflector.get<string[]>(
-      'permissions',
-      context.getHandler(),
-    );
+    const requiredPermissions =
+      this.reflector.get<string[]>('permissions', context.getHandler()) ||
+      this.reflector.get<string[]>(
+        'permissions',
+        context.getClass(), // Class-level metadata
+      );
 
     if (!requiredPermissions) {
       return true; // No permissions required
