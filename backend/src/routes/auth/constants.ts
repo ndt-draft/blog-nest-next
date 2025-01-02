@@ -7,3 +7,9 @@ export const permissions = {
   CREATE_USER: 'CREATE_USER',
   CREATE_POST: 'CREATE_POST',
 };
+
+export enum Role {
+  Admin = 'admin',
+  Author = 'author',
+  User = 'user',
+}

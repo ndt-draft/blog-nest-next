@@ -1,4 +1,10 @@
-import { Body, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Body,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+  Request,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -59,11 +65,34 @@ export class UsersService {
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(
+    id: number,
+    updateUserDto: UpdateUserDto,
+    @Request() req,
+  ): Promise<User> {
+    if (req.user.id === id && updateUserDto.role) {
+      throw new ForbiddenException('You cannot edit your role');
+    }
+
+    await this.findOne(id);
+
+    const updatedUser = await this.userRepository
+      .createQueryBuilder()
+      .update(User)
+      .set(updateUserDto)
+      .where('id = :id', { id })
+      .returning('*')
+      .execute();
+
+    return plainToInstance(User, updatedUser.raw[0]);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number, @Request() req): Promise<void> {
+    if (req.user.id === id) {
+      throw new ForbiddenException('You cannot delete yourself');
+    }
+
+    const user = await this.findOne(id);
+    await this.userRepository.remove(user);
   }
 }
