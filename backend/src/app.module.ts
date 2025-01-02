@@ -6,7 +6,7 @@ import { AuthModule } from './routes/auth/auth.module';
 import { PostsModule } from './routes/posts/posts.module';
 import { CategoriesModule } from './routes/categories/categories.module';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './routes/auth/jwt-auth.guard';
+import { JwtAuthGuard } from './routes/auth/jwt/jwt-auth.guard';
 
 @Module({
   imports: [

@@ -5,7 +5,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { permissions } from './constants';
+import { permissions } from '../constants';
 
 const { CREATE_USER, CREATE_POST } = permissions;
 
