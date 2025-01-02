@@ -16,6 +16,7 @@ import { Public } from '../auth/jwt/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/permissions/permissions.guard';
 import { CanCreatePost } from '../auth/permissions/permissions.decorator';
 import { EditPostGuard } from '../auth/permissions/edit-post.guard';
+import { ApiBody } from '@nestjs/swagger';
 
 @Controller('posts')
 export class PostsController {
@@ -43,6 +44,7 @@ export class PostsController {
   @Patch(':id')
   @UseGuards(PermissionsGuard, EditPostGuard)
   @CanCreatePost()
+  @ApiBody({ type: UpdatePostDto })
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postsService.update(+id, updatePostDto);
   }

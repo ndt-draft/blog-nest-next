@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsArray,
@@ -10,11 +11,17 @@ import {
 export class CreatePostDto {
   @IsString()
   @IsNotEmpty()
+  @ApiProperty()
   title: string;
 
   @IsArray()
   @IsNumber({}, { each: true })
   @Type(() => Number)
   @IsOptional()
+  @ApiProperty({
+    isArray: true,
+    type: 'number',
+    example: [1, 2],
+  })
   categories: number[];
 }
