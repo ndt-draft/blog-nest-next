@@ -25,4 +25,8 @@ export class CreatePostDto {
     required: false,
   })
   categories: number[];
+
+  @IsOptional()
+  @ApiProperty()
+  content: string;
 }
