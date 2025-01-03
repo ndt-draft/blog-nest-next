@@ -22,6 +22,7 @@ export class CreatePostDto {
     isArray: true,
     type: 'number',
     example: [1, 2],
+    required: false,
   })
   categories: number[];
 }
