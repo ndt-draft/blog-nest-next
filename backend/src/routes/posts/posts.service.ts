@@ -60,7 +60,10 @@ export class PostsService {
     const updatedPost = await this.postRepository
       .createQueryBuilder()
       .update(Post)
-      .set(updatePostDto)
+      .set({
+        ...updatePostDto,
+        updated_at: new Date(),
+      })
       .where('id = :id', { id })
       .returning('*')
       .execute();
