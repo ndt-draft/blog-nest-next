@@ -37,13 +37,9 @@ export class PostsService {
 
     // Save the post
     const savedPost = await this.postRepository.save(post);
+    const { user: postUser, ...postResponse } = savedPost;
 
-    return {
-      id: savedPost.id,
-      title: savedPost.title,
-      categories: savedPost.categories,
-      user_id: user.id,
-    };
+    return postResponse;
   }
 
   async findOne(id: number): Promise<Post> {

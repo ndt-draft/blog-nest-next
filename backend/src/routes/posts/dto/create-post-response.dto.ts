@@ -3,4 +3,6 @@ export class CreatePostResponseDto {
   title: string;
   categories: number[];
   user_id: number;
+  created_at: Date;
+  updated_at: Date;
 }

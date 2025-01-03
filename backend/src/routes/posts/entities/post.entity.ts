@@ -21,6 +21,16 @@ export class Post {
   @Column({ type: 'int', array: true, default: [] })
   categories: number[];
 
+  @Column({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
+  created_at: Date;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
+  updated_at: Date;
+
   @Column({ type: 'int' })
   user_id: number;
 
