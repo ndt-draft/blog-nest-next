@@ -14,7 +14,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PermissionsGuard } from '../auth/permissions/permissions.guard';
 import { CanCreateUser } from '../auth/permissions/permissions.decorator';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @UseGuards(PermissionsGuard)
 @CanCreateUser()
 @Controller('users')

@@ -16,7 +16,7 @@ import { Public } from '../auth/jwt/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/permissions/permissions.guard';
 import { CanCreatePost } from '../auth/permissions/permissions.decorator';
 import { EditPostGuard } from '../auth/permissions/edit-post.guard';
-import { ApiBody } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 
 @Controller('posts')
 export class PostsController {
@@ -31,6 +31,7 @@ export class PostsController {
   @Post()
   @UseGuards(PermissionsGuard)
   @CanCreatePost()
+  @ApiBearerAuth()
   create(@Body() createPostDto: CreatePostDto, @Request() req) {
     return this.postsService.create(createPostDto, req);
   }
@@ -45,6 +46,7 @@ export class PostsController {
   @UseGuards(PermissionsGuard, EditPostGuard)
   @CanCreatePost()
   @ApiBody({ type: UpdatePostDto })
+  @ApiBearerAuth()
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postsService.update(+id, updatePostDto);
   }
@@ -52,6 +54,7 @@ export class PostsController {
   @Delete(':id')
   @UseGuards(PermissionsGuard, EditPostGuard)
   @CanCreatePost()
+  @ApiBearerAuth()
   remove(@Param('id') id: string) {
     return this.postsService.remove(+id);
   }
