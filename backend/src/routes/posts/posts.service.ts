@@ -13,7 +13,8 @@ import { User } from '../users/entities/user.entity';
 import { CreatePostResponseDto } from './dto/create-post-response.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Model } from 'mongoose';
-import { Post as PostMongo } from './entities/post.interface';
+import { Post as PostMongo } from './schemas/post.interface';
+import { PostsResponseDto } from './dto/posts-response.dto';
 
 @Injectable()
 export class PostsService {
@@ -26,17 +27,29 @@ export class PostsService {
     private postModel: Model<PostMongo>,
   ) {}
 
-  async findAll(): Promise<CreatePostResponseDto[]> {
-    const posts = await this.postRepository.find();
+  async findAll(page: number, limit: number): Promise<PostsResponseDto> {
+    const posts = await this.postRepository.find({
+      skip: page * limit,
+      take: limit,
+    });
+
+    const total = await this.postRepository.count();
 
     const contents = await this.postModel.find({
       post_id: { $in: posts.map((post) => post.id) },
     });
 
-    return posts.map((post) => ({
-      ...post,
-      content: contents.find((c) => c.post_id === post.id)?.content || null,
-    }));
+    return {
+      posts: posts.map((post) => ({
+        ...post,
+        content: contents.find((c) => c.post_id === post.id)?.content || null,
+      })),
+      pagination: {
+        limit,
+        page,
+        total,
+      },
+    };
   }
 
   async create(
@@ -88,7 +101,7 @@ export class PostsService {
     const postMongo = await this.postModel.findOne({ post_id: id });
     return {
       ...post,
-      content: postMongo.content,
+      content: postMongo?.content || null,
     };
   }
 

@@ -1,11 +1,14 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -16,7 +19,7 @@ import { Public } from '../auth/jwt/jwt-auth.guard';
 import { PermissionsGuard } from '../auth/permissions/permissions.guard';
 import { CanCreatePost } from '../auth/permissions/permissions.decorator';
 import { EditPostGuard } from '../auth/permissions/edit-post.guard';
-import { ApiBearerAuth, ApiBody } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiQuery } from '@nestjs/swagger';
 
 @Controller('posts')
 export class PostsController {
@@ -24,8 +27,13 @@ export class PostsController {
 
   @Public()
   @Get()
-  findAll() {
-    return this.postsService.findAll();
+  @ApiQuery({ name: 'page', required: false, default: 0 })
+  @ApiQuery({ name: 'limit', required: false, default: 10 })
+  findAll(
+    @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  ) {
+    return this.postsService.findAll(page, limit);
   }
 
   @Post()
