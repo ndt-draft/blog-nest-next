@@ -26,8 +26,17 @@ export class PostsService {
     private postModel: Model<PostMongo>,
   ) {}
 
-  findAll(): Promise<Post[]> {
-    return this.postRepository.find();
+  async findAll(): Promise<CreatePostResponseDto[]> {
+    const posts = await this.postRepository.find();
+
+    const contents = await this.postModel.find({
+      post_id: { $in: posts.map((post) => post.id) },
+    });
+
+    return posts.map((post) => ({
+      ...post,
+      content: contents.find((c) => c.post_id === post.id)?.content || null,
+    }));
   }
 
   async create(
@@ -83,21 +92,39 @@ export class PostsService {
     };
   }
 
-  async update(id: number, updatePostDto: UpdatePostDto): Promise<Post> {
-    await this.findOne(id);
+  async update(
+    id: number,
+    updatePostDto: UpdatePostDto,
+  ): Promise<CreatePostResponseDto> {
+    await this.getPostById(id);
+
+    const { content, ...postData } = updatePostDto;
 
     const updatedPost = await this.postRepository
       .createQueryBuilder()
       .update(Post)
       .set({
-        ...updatePostDto,
+        ...postData,
         updated_at: new Date(),
       })
       .where('id = :id', { id })
       .returning('*')
       .execute();
 
-    return updatedPost.raw[0];
+    const postMongo = await this.postModel.findOneAndUpdate(
+      { post_id: id },
+      {
+        content,
+      },
+      {
+        returnDocument: 'after',
+      },
+    );
+
+    return {
+      ...updatedPost.raw[0],
+      content: postMongo.content,
+    };
   }
 
   async remove(id: number): Promise<void> {

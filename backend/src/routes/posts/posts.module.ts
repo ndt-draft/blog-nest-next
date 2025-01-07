@@ -5,7 +5,7 @@ import { PostsService } from './posts.service';
 import { Post } from './entities/post.entity';
 import { User } from '../users/entities/user.entity';
 import { DatabaseModule } from 'src/mongo/database.module';
-import { postsProviders } from 'src/mongo/schemas/post.providers';
+import { postsProviders } from './schemas/post.providers';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, User]), DatabaseModule],
