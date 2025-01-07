@@ -28,12 +28,10 @@ export class PostsService {
   ) {}
 
   async findAll(page: number, limit: number): Promise<PostsResponseDto> {
-    const posts = await this.postRepository.find({
+    const [posts, total] = await this.postRepository.findAndCount({
       skip: page * limit,
       take: limit,
     });
-
-    const total = await this.postRepository.count();
 
     const contents = await this.postModel.find({
       post_id: { $in: posts.map((post) => post.id) },
