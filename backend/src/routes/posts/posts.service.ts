@@ -130,5 +130,6 @@ export class PostsService {
   async remove(id: number): Promise<void> {
     const post = await this.getPostById(id);
     await this.postRepository.remove(post);
+    await this.postModel.deleteOne({ post_id: id });
   }
 }
