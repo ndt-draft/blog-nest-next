@@ -29,6 +29,7 @@ export const nestedCommentsPipelines = [
     $group: {
       _id: '$_id',
       postId: { $first: '$postId' },
+      userId: { $first: '$userId' },
       content: { $first: '$content' },
       parentId: { $first: '$parentId' },
       createdAt: { $first: '$createdAt' },
@@ -37,6 +38,7 @@ export const nestedCommentsPipelines = [
         $push: {
           _id: '$replies._id',
           postId: '$replies.postId',
+          userId: '$replies.userId',
           content: '$replies.content',
           parentId: '$replies.parentId',
           createdAt: '$replies.createdAt',
@@ -51,6 +53,7 @@ export const nestedCommentsPipelines = [
     $project: {
       _id: 1,
       postId: 1,
+      userId: 1,
       content: 1,
       parentId: 1,
       createdAt: 1,

@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, Request } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import mongoose, { Model } from 'mongoose';
@@ -31,7 +31,10 @@ export class CommentsService {
     return comment;
   }
 
-  async create(createCommentDto: CreateCommentDto): Promise<Comment> {
+  async create(
+    createCommentDto: CreateCommentDto,
+    @Request() req,
+  ): Promise<Comment> {
     await this.postsService.getPostById(createCommentDto.postId);
 
     const { parentId } = createCommentDto;
@@ -42,6 +45,7 @@ export class CommentsService {
 
     const comment = await this.commentModel.create({
       ...createCommentDto,
+      userId: req.user.id,
       parentId: parentId ? new mongoose.Types.ObjectId(parentId) : null,
     });
     return comment;
@@ -51,19 +55,24 @@ export class CommentsService {
     page: number,
     limit: number,
     postId: number,
+    userId: number,
   ): Promise<CommentsResponseDto> {
     // Ensure the limit is positive
     if (limit <= 0) {
       throw new Error('The limit must be positive');
     }
 
-    const matchQuery: { parentId: any; postId?: number } = {
+    const matchQuery: { parentId: any; postId?: number; userId?: number } = {
       parentId: null,
     };
-    if (postId) {
+    if (postId > 0) {
       await this.postsService.getPostById(postId);
       matchQuery.postId = postId;
     }
+    if (userId > 0) {
+      matchQuery.userId = userId;
+    }
+    console.log(matchQuery);
 
     const data = await this.commentModel.aggregate([
       {

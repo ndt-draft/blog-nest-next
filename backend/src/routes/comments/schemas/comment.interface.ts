@@ -2,6 +2,7 @@ import { Document, ObjectId } from 'mongoose';
 
 export interface Comment extends Document {
   readonly postId: number;
+  readonly userId: number;
   readonly content: string;
   readonly parentId: object;
   readonly createdAt: Date;
