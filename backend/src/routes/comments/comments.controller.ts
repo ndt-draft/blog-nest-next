@@ -6,12 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
+  ParseIntPipe,
+  DefaultValuePipe,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Public } from '../auth/jwt/jwt-auth.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 
 @Controller('comments')
 export class CommentsController {
@@ -25,8 +28,13 @@ export class CommentsController {
 
   @Public()
   @Get()
-  findAll() {
-    return this.commentsService.findAll();
+  @ApiQuery({ name: 'page', required: false, default: 0 })
+  @ApiQuery({ name: 'limit', required: false, default: 10 })
+  findAll(
+    @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  ) {
+    return this.commentsService.findAll(page, limit);
   }
 
   @Public()

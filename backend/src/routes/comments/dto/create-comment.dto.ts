@@ -5,7 +5,7 @@ export class CreateCommentDto {
   @IsNumber()
   @IsNotEmpty()
   @ApiProperty()
-  post_id: number;
+  postId: number;
 
   @IsString()
   @IsNotEmpty()
@@ -14,5 +14,5 @@ export class CreateCommentDto {
 
   @IsOptional()
   @ApiProperty()
-  parent_id: string;
+  parentId: string;
 }

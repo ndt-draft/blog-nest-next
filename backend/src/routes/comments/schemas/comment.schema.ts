@@ -1,7 +1,12 @@
 import * as mongoose from 'mongoose';
 
-export const CommentSchema = new mongoose.Schema({
-  post_id: Number,
-  content: String,
-  parent_id: Object,
-});
+export const CommentSchema = new mongoose.Schema(
+  {
+    postId: Number,
+    content: String,
+    parentId: Object,
+  },
+  {
+    timestamps: true, // Automatically adds createdAt and updatedAt
+  },
+);
