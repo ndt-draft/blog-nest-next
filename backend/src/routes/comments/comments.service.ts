@@ -5,17 +5,19 @@ import mongoose, { Model } from 'mongoose';
 import { Comment } from './schemas/comment.interface';
 import { CommentsResponseDto } from './dto/comments-response.dto';
 import { nestedCommentsPipelines } from './pipelines/nested-comments.pipelines';
+import { PostsService } from '../posts/posts.service';
 
 @Injectable()
 export class CommentsService {
   constructor(
     @Inject('COMMENT_MODEL')
     private commentModel: Model<Comment>,
+    private postsService: PostsService,
   ) {}
 
   async getCommentById(id: string): Promise<Comment> {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new Error('Invalid id');
+      throw new Error('Invalid comment or parent id');
     }
 
     const comment = await this.commentModel.findById(
@@ -30,6 +32,8 @@ export class CommentsService {
   }
 
   async create(createCommentDto: CreateCommentDto): Promise<Comment> {
+    await this.postsService.getPostById(createCommentDto.postId);
+
     const { parentId } = createCommentDto;
 
     if (parentId) {
@@ -43,16 +47,28 @@ export class CommentsService {
     return comment;
   }
 
-  async findAll(page: number, limit: number): Promise<CommentsResponseDto> {
+  async findAll(
+    page: number,
+    limit: number,
+    postId: number,
+  ): Promise<CommentsResponseDto> {
     // Ensure the limit is positive
     if (limit <= 0) {
       throw new Error('The limit must be positive');
     }
 
+    const matchQuery: { parentId: any; postId?: number } = {
+      parentId: null,
+    };
+    if (postId) {
+      await this.postsService.getPostById(postId);
+      matchQuery.postId = postId;
+    }
+
     const data = await this.commentModel.aggregate([
       {
         // Match root comments (parentId is null)
-        $match: { parentId: null },
+        $match: matchQuery,
       },
       ...nestedCommentsPipelines,
       {

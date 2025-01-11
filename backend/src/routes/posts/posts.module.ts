@@ -11,5 +11,6 @@ import { postsProviders } from './schemas/post.providers';
   imports: [TypeOrmModule.forFeature([Post, User]), DatabaseModule],
   controllers: [PostsController],
   providers: [PostsService, ...postsProviders],
+  exports: [PostsService],
 })
 export class PostsModule {}

@@ -30,11 +30,13 @@ export class CommentsController {
   @Get()
   @ApiQuery({ name: 'page', required: false, default: 0 })
   @ApiQuery({ name: 'limit', required: false, default: 10 })
+  @ApiQuery({ name: 'postId', required: false })
   findAll(
     @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('postId', new DefaultValuePipe(0), ParseIntPipe) postId: number,
   ) {
-    return this.commentsService.findAll(page, limit);
+    return this.commentsService.findAll(page, limit, postId);
   }
 
   @Public()
