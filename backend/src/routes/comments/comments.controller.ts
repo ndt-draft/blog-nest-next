@@ -7,15 +7,17 @@ import {
   Param,
   Delete,
   Query,
-  ParseIntPipe,
-  DefaultValuePipe,
   Request,
+  UseGuards,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { Public } from '../auth/jwt/jwt-auth.guard';
 import { ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { GetCommentsQueryDto } from './dto/get-comments-query.dto';
+import { CanManageComment } from '../auth/permissions/permissions.decorator';
+import { PermissionsGuard } from '../auth/permissions/permissions.guard';
 
 @Controller('comments')
 export class CommentsController {
@@ -33,13 +35,8 @@ export class CommentsController {
   @ApiQuery({ name: 'limit', required: false, default: 10 })
   @ApiQuery({ name: 'postId', required: false })
   @ApiQuery({ name: 'userId', required: false })
-  findAll(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('postId', new DefaultValuePipe(0), ParseIntPipe) postId: number,
-    @Query('userId', new DefaultValuePipe(0), ParseIntPipe) userId: number,
-  ) {
-    return this.commentsService.findAll(page, limit, postId, userId);
+  findAll(@Query() query: GetCommentsQueryDto) {
+    return this.commentsService.findAll(query);
   }
 
   @Public()
@@ -49,12 +46,16 @@ export class CommentsController {
   }
 
   @Patch(':id')
+  @UseGuards(PermissionsGuard)
+  @CanManageComment()
   @ApiBearerAuth()
   update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
     return this.commentsService.update(id, updateCommentDto);
   }
 
   @Delete(':id')
+  @UseGuards(PermissionsGuard)
+  @CanManageComment()
   @ApiBearerAuth()
   remove(@Param('id') id: string) {
     return this.commentsService.remove(id);

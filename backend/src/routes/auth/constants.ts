@@ -6,6 +6,7 @@ export const jwtConstants = {
 export const permissions = {
   CREATE_USER: 'CREATE_USER',
   CREATE_POST: 'CREATE_POST',
+  MANAGE_COMMENT: 'MANAGE_COMMENT',
 };
 
 export enum Role {

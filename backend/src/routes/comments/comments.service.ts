@@ -6,6 +6,7 @@ import { Comment } from './schemas/comment.interface';
 import { CommentsResponseDto } from './dto/comments-response.dto';
 import { nestedCommentsPipelines } from './pipelines/nested-comments.pipelines';
 import { PostsService } from '../posts/posts.service';
+import { GetCommentsQueryDto } from './dto/get-comments-query.dto';
 
 @Injectable()
 export class CommentsService {
@@ -51,20 +52,16 @@ export class CommentsService {
     return comment;
   }
 
-  async findAll(
-    page: number,
-    limit: number,
-    postId: number,
-    userId: number,
-  ): Promise<CommentsResponseDto> {
+  async findAll(query: GetCommentsQueryDto): Promise<CommentsResponseDto> {
+    const { page, limit, postId, userId } = query;
+
     // Ensure the limit is positive
     if (limit <= 0) {
       throw new Error('The limit must be positive');
     }
 
-    const matchQuery: { parentId: any; postId?: number; userId?: number } = {
-      parentId: null,
-    };
+    // will support parentId for loading nested replies later
+    const matchQuery: Record<string, any> = { parentId: null };
     if (postId > 0) {
       await this.postsService.getPostById(postId);
       matchQuery.postId = postId;
@@ -72,7 +69,6 @@ export class CommentsService {
     if (userId > 0) {
       matchQuery.userId = userId;
     }
-    console.log(matchQuery);
 
     const data = await this.commentModel.aggregate([
       {

@@ -7,10 +7,10 @@ import {
 import { Reflector } from '@nestjs/core';
 import { permissions } from '../constants';
 
-const { CREATE_USER, CREATE_POST } = permissions;
+const { CREATE_USER, CREATE_POST, MANAGE_COMMENT } = permissions;
 
 const PERMISSIONS = {
-  admin: [CREATE_USER, CREATE_POST],
+  admin: [CREATE_USER, CREATE_POST, MANAGE_COMMENT],
   author: [CREATE_POST],
   user: [],
 };

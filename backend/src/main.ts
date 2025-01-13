@@ -22,6 +22,7 @@ async function bootstrap() {
       whitelist: true, // Strips unknown properties
       forbidNonWhitelisted: true, // Throws an error if unknown properties are present
       disableErrorMessages: false, // turn to true on prod env
+      transform: true,
     }),
   );
   await app.listen(process.env.PORT ?? 3000);
