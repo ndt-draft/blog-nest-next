@@ -30,12 +30,18 @@ export class PostsController {
   @ApiQuery({ name: 'page', required: false, default: 0 })
   @ApiQuery({ name: 'limit', required: false, default: 10 })
   @ApiQuery({ name: 'category', required: false, default: 0 })
+  @ApiQuery({
+    name: 's',
+    required: false,
+    description: 'search term',
+  })
   findAll(
     @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('category', new DefaultValuePipe(0), ParseIntPipe) category: number,
+    @Query('s') s: string,
   ) {
-    return this.postsService.findAll(page, limit, category);
+    return this.postsService.findAll(page, limit, category, s);
   }
 
   @Post()

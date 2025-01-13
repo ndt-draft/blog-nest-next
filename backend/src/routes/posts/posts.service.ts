@@ -6,7 +6,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ArrayContains, Repository } from 'typeorm';
+import { ArrayContains, Like, Repository } from 'typeorm';
 import { Post } from './entities/post.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { User } from '../users/entities/user.entity';
@@ -31,10 +31,14 @@ export class PostsService {
     page: number,
     limit: number,
     category: number,
+    s: string,
   ): Promise<PostsResponseDto> {
     const whereQuery: Record<string, any> = {};
     if (category > 0) {
       whereQuery.categories = ArrayContains([category]);
+    }
+    if (s) {
+      whereQuery.title = Like(`%${s}%`);
     }
 
     const [posts, total] = await this.postRepository.findAndCount({
