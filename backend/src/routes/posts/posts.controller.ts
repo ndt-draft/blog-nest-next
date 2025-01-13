@@ -29,11 +29,13 @@ export class PostsController {
   @Get()
   @ApiQuery({ name: 'page', required: false, default: 0 })
   @ApiQuery({ name: 'limit', required: false, default: 10 })
+  @ApiQuery({ name: 'category', required: false, default: 0 })
   findAll(
     @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('category', new DefaultValuePipe(0), ParseIntPipe) category: number,
   ) {
-    return this.postsService.findAll(page, limit);
+    return this.postsService.findAll(page, limit, category);
   }
 
   @Post()

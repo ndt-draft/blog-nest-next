@@ -6,7 +6,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ArrayContains, Repository } from 'typeorm';
 import { Post } from './entities/post.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { User } from '../users/entities/user.entity';
@@ -27,10 +27,20 @@ export class PostsService {
     private postModel: Model<PostMongo>,
   ) {}
 
-  async findAll(page: number, limit: number): Promise<PostsResponseDto> {
+  async findAll(
+    page: number,
+    limit: number,
+    category: number,
+  ): Promise<PostsResponseDto> {
+    const whereQuery: Record<string, any> = {};
+    if (category > 0) {
+      whereQuery.categories = ArrayContains([category]);
+    }
+
     const [posts, total] = await this.postRepository.findAndCount({
       skip: page * limit,
       take: limit,
+      where: whereQuery,
     });
 
     const contents = await this.postModel.find({
