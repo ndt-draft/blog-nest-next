@@ -6,7 +6,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ArrayContains, Like, Repository } from 'typeorm';
+import { ArrayContains, In, Like, Repository } from 'typeorm';
 import { Post } from './entities/post.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { User } from '../users/entities/user.entity';
@@ -15,6 +15,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { Model } from 'mongoose';
 import { Post as PostMongo } from './schemas/post.interface';
 import { PostsResponseDto } from './dto/posts-response.dto';
+import { Category } from '../categories/entities/category.entity';
 
 @Injectable()
 export class PostsService {
@@ -23,6 +24,8 @@ export class PostsService {
     private postRepository: Repository<Post>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
     @Inject('POST_MODEL')
     private postModel: Model<PostMongo>,
   ) {}
@@ -47,6 +50,7 @@ export class PostsService {
       where: whereQuery,
       relations: {
         user: true,
+        categories: true,
       },
       select: {
         user: {
@@ -81,12 +85,18 @@ export class PostsService {
     const user = await this.userRepository.findOneBy({
       id: req.user.id,
     });
+    const categories = await this.categoryRepository.find({
+      where: {
+        id: In(createPostDto.categories),
+      },
+    });
     if (!user) {
       throw new NotFoundException(`User with ID ${req.user.id} not found`);
     }
     const post = this.postRepository.create({
       ...createPostDto,
       user,
+      categories,
     });
 
     // Save the post
@@ -116,6 +126,7 @@ export class PostsService {
       },
       relations: {
         user: true,
+        categories: true,
       },
       select: {
         user: {
@@ -146,19 +157,28 @@ export class PostsService {
     updatePostDto: UpdatePostDto,
   ): Promise<CreatePostResponseDto> {
     const post = await this.getPostById(id);
+    const { content, categories: categoryIds, ...postData } = updatePostDto;
 
-    const { content, ...postData } = updatePostDto;
+    let categories: Category[] = [];
 
-    const updatedPost = await this.postRepository
-      .createQueryBuilder()
-      .update(Post)
-      .set({
-        ...postData,
-        updated_at: new Date(),
-      })
-      .where('id = :id', { id })
-      .returning('*')
-      .execute();
+    if (categoryIds) {
+      categories = await this.categoryRepository.find({
+        where: {
+          id: In(categoryIds),
+        },
+      });
+    }
+
+    const updateData: Partial<Post> = {
+      ...postData,
+      updated_at: new Date(),
+    };
+
+    if (categoryIds) {
+      updateData.categories = categories;
+    }
+
+    const updatedPost = await this.postRepository.save({ ...updateData, id });
 
     const postMongo = await this.postModel.findOneAndUpdate(
       { post_id: id },
@@ -171,7 +191,7 @@ export class PostsService {
     );
 
     return {
-      ...updatedPost.raw[0],
+      ...updatedPost,
       user: post.user,
       content: postMongo.content,
     };

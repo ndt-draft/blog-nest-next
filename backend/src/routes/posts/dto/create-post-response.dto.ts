@@ -1,8 +1,13 @@
+type Category = {
+  id: number;
+  name: string;
+};
+
 export class CreatePostResponseDto {
   id: number;
   title: string;
   content: string;
-  categories: number[];
+  categories: Category[];
   user: {
     id: number;
     name: string;
