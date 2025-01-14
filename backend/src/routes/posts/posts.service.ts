@@ -45,6 +45,16 @@ export class PostsService {
       skip: page * limit,
       take: limit,
       where: whereQuery,
+      relations: {
+        user: true,
+      },
+      select: {
+        user: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
     });
 
     const contents = await this.postModel.find({
@@ -81,7 +91,6 @@ export class PostsService {
 
     // Save the post
     const savedPost = await this.postRepository.save(post);
-    const { user: postUser, ...postResponse } = savedPost;
 
     const postMongo = new this.postModel({
       post_id: savedPost.id,
@@ -90,7 +99,12 @@ export class PostsService {
     await postMongo.save();
 
     return {
-      ...postResponse,
+      ...savedPost,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
       content: postMongo.content,
     };
   }
@@ -99,6 +113,16 @@ export class PostsService {
     const post = await this.postRepository.findOne({
       where: {
         id,
+      },
+      relations: {
+        user: true,
+      },
+      select: {
+        user: {
+          id: true,
+          name: true,
+          email: true,
+        },
       },
     });
     if (!post) {
@@ -121,7 +145,7 @@ export class PostsService {
     id: number,
     updatePostDto: UpdatePostDto,
   ): Promise<CreatePostResponseDto> {
-    await this.getPostById(id);
+    const post = await this.getPostById(id);
 
     const { content, ...postData } = updatePostDto;
 
@@ -148,6 +172,7 @@ export class PostsService {
 
     return {
       ...updatedPost.raw[0],
+      user: post.user,
       content: postMongo.content,
     };
   }
