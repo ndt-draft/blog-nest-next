@@ -1,3 +1,4 @@
+import 'tsconfig-paths/register'; // Add this line
 import { DataSource } from 'typeorm';
 
 const dataSource = new DataSource({

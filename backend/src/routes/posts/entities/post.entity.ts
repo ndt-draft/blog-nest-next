@@ -8,7 +8,7 @@ import {
   JoinTable,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
-import { Category } from '../../categories/entities/category.entity';
+import { Category } from 'src/routes/categories/entities/category.entity';
 
 @Entity('posts') // Explicitly name the table in the database
 export class Post {
