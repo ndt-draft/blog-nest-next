@@ -3,16 +3,18 @@ type Category = {
   name: string;
 };
 
+type User = {
+  id: number;
+  name: string;
+  email: string;
+};
+
 export class CreatePostResponseDto {
   id: number;
   title: string;
   content: string;
   categories: Category[];
-  user: {
-    id: number;
-    name: string;
-    email: string;
-  };
+  user: User;
   user_id: number;
   created_at: Date;
   updated_at: Date;

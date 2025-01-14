@@ -36,18 +36,31 @@ export class PostsService {
     category: number,
     s: string,
   ): Promise<PostsResponseDto> {
-    const whereQuery: Record<string, any> = {};
-    if (category > 0) {
-      whereQuery.categories = ArrayContains([category]);
-    }
-    if (s) {
-      whereQuery.title = Like(`%${s}%`);
+    const queryBuilder = this.postRepository.createQueryBuilder('post');
+
+    // Filter by category if provided
+    if (category && category > 0) {
+      queryBuilder
+        .leftJoinAndSelect('post.categories', 'category') // Join the categories relation
+        .where('category.id = :category', { category }); // Filter posts by category ID
     }
 
-    const [posts, total] = await this.postRepository.findAndCount({
-      skip: page * limit,
-      take: limit,
-      where: whereQuery,
+    // Filter by title if search string (s) is provided
+    if (s) {
+      queryBuilder.andWhere('post.title LIKE :title', { title: `%${s}%` });
+    }
+
+    // Apply pagination
+    queryBuilder.skip(page * limit).take(limit);
+
+    // Execute the query to get posts
+    const [rawPosts, total] = await queryBuilder.getManyAndCount();
+
+    // Get posts with full relational data
+    const posts = await this.postRepository.find({
+      where: {
+        id: In(rawPosts.map((post) => post.id)),
+      },
       relations: {
         user: true,
         categories: true,
