@@ -7,7 +7,7 @@ const dataSource = new DataSource({
   port: 5432,
   username: 'thanhnguyen',
   password: '',
-  database: 'blog2',
+  database: 'blog-nest-next',
   entities: [__dirname + '/**/*.entity{.ts,.js}'], // Entity files
   migrations: [__dirname + '/migrations/*{.ts,.js}'], // Migration files
   synchronize: false, // Disable for production
