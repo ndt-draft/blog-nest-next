@@ -60,12 +60,12 @@ export class SeedService {
       {
         title: 'Introduction to PostgreSQL',
         user: users[1], // Author User
-        categories: [categories[0]],
+        categories,
       },
       {
         title: 'Understanding TypeORM Relationships',
         user: users[1], // Author User
-        categories: [categories[1]],
+        categories,
       },
     ]);
 
