@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from '../routes/users/entities/user.entity';
 import { Post } from '../routes/posts/entities/post.entity';
 import { Category } from '../routes/categories/entities/category.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class SeedService {
@@ -15,24 +16,27 @@ export class SeedService {
   ) {}
 
   async seed() {
+    const saltRounds = 10;
+    const password = await bcrypt.hash('1234', saltRounds);
+
     // Seed Users
     const users = await this.userRepository.save([
       {
         name: 'Admin User',
         email: 'admin@example.com',
-        password: 'admin123',
+        password,
         role: 'admin',
       },
       {
         name: 'Author User',
         email: 'author@example.com',
-        password: 'author123',
+        password,
         role: 'author',
       },
       {
         name: 'Regular User',
         email: 'user@example.com',
-        password: 'user123',
+        password,
         role: 'user',
       },
     ]);
