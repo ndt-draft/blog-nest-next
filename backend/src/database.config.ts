@@ -12,5 +12,5 @@ export const databaseConfig: DataSourceOptions = {
   migrations: [__dirname + '/migrations/*{.ts,.js}'], // Migration files
   // Overrides
   synchronize: true, // disable in prod
-  logging: true, // disable in prod
+  logging: process.env.NODE_ENV === 'local', // disable in prod
 };

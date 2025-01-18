@@ -8,6 +8,11 @@ import { CategoriesModule } from './routes/categories/categories.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './routes/auth/jwt/jwt-auth.guard';
 import { CommentsModule } from './routes/comments/comments.module';
+import { SeedService } from './seed/seed.service';
+import { User } from './routes/users/entities/user.entity';
+import { Post } from './routes/posts/entities/post.entity';
+import { Category } from './routes/categories/entities/category.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -17,6 +22,7 @@ import { CommentsModule } from './routes/comments/comments.module';
     PostsModule,
     CategoriesModule,
     CommentsModule,
+    TypeOrmModule.forFeature([User, Post, Category]), // Register entities here
   ],
   controllers: [],
   providers: [
@@ -24,6 +30,7 @@ import { CommentsModule } from './routes/comments/comments.module';
       provide: APP_GUARD,
       useClass: JwtAuthGuard, // Enable authentication globally
     },
+    SeedService,
   ],
 })
 export class AppModule {}

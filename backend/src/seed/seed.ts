@@ -1,9 +1,12 @@
 import { NestFactory } from '@nestjs/core';
-import { SeedModule } from './seed.module';
 import { SeedService } from './seed.service';
+import { AppModule } from '../app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.createApplicationContext(SeedModule);
+  const app = await NestFactory.createApplicationContext(AppModule);
+  // Enable shutdown hooks
+  app.enableShutdownHooks();
+
   const seedService = app.get(SeedService);
 
   console.log('Seeding database...');
@@ -11,8 +14,10 @@ async function bootstrap() {
 
   console.log('Seeding completed!');
   await app.close();
+  process.exit(0); // Ensure the process exits
 }
 
 bootstrap().catch((err) => {
   console.error('Seeding failed:', err);
+  process.exit(1); // Exit with error
 });
