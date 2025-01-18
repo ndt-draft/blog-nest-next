@@ -1,15 +1,9 @@
 import 'tsconfig-paths/register'; // Add this line
 import { DataSource } from 'typeorm';
+import { databaseConfig } from './database.config';
 
 const dataSource = new DataSource({
-  type: 'postgres', // Database type
-  host: 'localhost',
-  port: 5432,
-  username: 'thanhnguyen',
-  password: '',
-  database: 'blog-nest-next',
-  entities: [__dirname + '/**/*.entity{.ts,.js}'], // Entity files
-  migrations: [__dirname + '/migrations/*{.ts,.js}'], // Migration files
+  ...databaseConfig,
   synchronize: false, // Disable for production
 });
 
