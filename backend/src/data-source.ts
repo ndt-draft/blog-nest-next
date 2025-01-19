@@ -1,9 +1,9 @@
 import 'tsconfig-paths/register'; // Add this line
 import { DataSource } from 'typeorm';
-import { databaseConfig } from './database.config';
+import { migrationConfig } from './database.config';
 
 const dataSource = new DataSource({
-  ...databaseConfig,
+  ...migrationConfig,
   synchronize: false, // Disable for production
 });
 

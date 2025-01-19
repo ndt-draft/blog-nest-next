@@ -13,9 +13,16 @@ import { User } from './routes/users/entities/user.entity';
 import { Post } from './routes/posts/entities/post.entity';
 import { Category } from './routes/categories/entities/category.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: `.env.${process.env.NODE_ENV || 'local'}`, // Default to .env.local
+      load: [configuration],
+      isGlobal: true,
+    }),
     DatabaseModule,
     UsersModule,
     AuthModule,

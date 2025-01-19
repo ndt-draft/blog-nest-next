@@ -1,6 +1,7 @@
 import { DataSourceOptions } from 'typeorm';
+import { ConfigService } from '@nestjs/config';
 
-export const databaseConfig: DataSourceOptions = {
+export const migrationConfig: DataSourceOptions = {
   // Common config
   type: 'postgres',
   host: process.env.DB_HOST || 'localhost',
@@ -11,6 +12,23 @@ export const databaseConfig: DataSourceOptions = {
   entities: [__dirname + '/**/*.entity{.ts,.js}'],
   migrations: [__dirname + '/migrations/*{.ts,.js}'], // Migration files
   // Overrides
-  synchronize: true, // disable in prod
-  logging: process.env.NODE_ENV === 'local', // disable in prod
+  synchronize: false, // disable in prod
+  logging: false, // disable in prod
 };
+
+export const getDatabaseConfig = (
+  configService: ConfigService,
+): DataSourceOptions => ({
+  // Common config
+  type: 'postgres',
+  host: configService.get<string>('database.host'),
+  port: configService.get<number>('database.port'),
+  username: configService.get<string>('database.user'),
+  password: configService.get<string>('database.password'),
+  database: configService.get<string>('database.name'),
+  entities: [__dirname + '/**/*.entity{.ts,.js}'],
+  migrations: [__dirname + '/migrations/*{.ts,.js}'], // Migration files
+  // Overrides
+  synchronize: configService.get<boolean>('database.synchronize'), // disable in prod
+  logging: configService.get<boolean>('database.logging'), // disable in prod
+});
