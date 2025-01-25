@@ -5,6 +5,9 @@ import type {
 } from "next";
 import { Post } from "@/types/post";
 import { useRouter } from "next/router";
+import { Category } from "@/types/category";
+import { Comment } from "@/types/comment";
+import { useEffect, useState } from "react";
 
 export const getStaticPaths = (async () => {
   // Call an external API endpoint to get posts
@@ -39,15 +42,64 @@ export default function Page({
   post,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
+  const [comments, setComments] = useState([]);
+
+  useEffect(() => {
+    if (!post) {
+      return;
+    }
+
+    const fetchComments = async () => {
+      const response = await fetch(
+        `http://localhost:3333/comments?postId=${post?.id}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      setComments(result?.comments);
+    };
+
+    fetchComments().catch((e) => {
+      // handle the error as needed
+      console.error("An error occurred while fetching the data: ", e);
+    });
+  }, []);
 
   if (router.isFallback) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div>
+    <div className="p-20 grid gap-4">
       <h2>{post.title}</h2>
+      <div>
+        <span>Categories: </span>
+        <i>{post.categories.map((cat: Category) => cat.name).join(", ")}</i>
+      </div>
       <div>{post.content}</div>
+      <div>
+        Comments:
+        <ol className="list-inside list-decimal">
+          {comments.map((comment: Comment) => (
+            <li>
+              {comment.content}
+              <ol className="ml-4 list-inside list-decimal">
+                {comment?.replies?.map((reply) => (
+                  <li>
+                    {reply.content}
+                    <ol className="ml-4 list-inside list-decimal">
+                      {reply?.replies?.map((reply) => (
+                        <li>{reply.content}</li>
+                      ))}
+                    </ol>
+                  </li>
+                ))}
+              </ol>
+            </li>
+          ))}
+        </ol>
+      </div>
     </div>
   );
 }
