@@ -30,7 +30,7 @@ export const getStaticProps = (async ({ params }) => {
   }
 
   const post = await res.json();
-  return { props: { post } };
+  return { props: { post }, revalidate: 10 };
 }) satisfies GetStaticProps<{
   post: Post;
 }>;
