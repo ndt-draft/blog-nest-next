@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { Category } from "@/types/category";
 import { Comment } from "@/types/comment";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export const getStaticPaths = (async () => {
   // Call an external API endpoint to get posts
@@ -75,7 +76,13 @@ export default function Page({
       <h2>{post.title}</h2>
       <div>
         <span>Categories: </span>
-        <i>{post.categories.map((cat: Category) => cat.name).join(", ")}</i>
+        <i>
+          {post.categories.map((cat: Category) => (
+            <Link className="mr-2 text-blue-600" href={`/categories/${cat.id}`}>
+              {cat.name},
+            </Link>
+          ))}
+        </i>
       </div>
       <div>{post.content}</div>
       <div>
