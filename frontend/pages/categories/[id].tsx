@@ -1,6 +1,7 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import { Category } from "@/types/category";
 import { Post } from "@/types/post";
+import PostList from "@/components/PostList";
 
 export const getServerSideProps = (async ({ params }) => {
   // Fetch data from external API
@@ -29,14 +30,9 @@ export default function Page({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
-      <h2>{category.id}</h2>
-      <p>{category.name}</p>
+      <h2>Category: {category.name}</h2>
 
-      <ol>
-        {posts.map((post: Post) => (
-          <li>{post.title}</li>
-        ))}
-      </ol>
+      <PostList posts={posts} />
     </>
   );
 }

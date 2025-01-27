@@ -85,28 +85,30 @@ export default function Page({
         </i>
       </div>
       <div>{post.content}</div>
-      <div>
-        Comments:
-        <ol className="list-inside list-decimal">
-          {comments.map((comment: Comment) => (
-            <li>
-              {comment.content}
-              <ol className="ml-4 list-inside list-decimal">
-                {comment?.replies?.map((reply) => (
-                  <li>
-                    {reply.content}
-                    <ol className="ml-4 list-inside list-decimal">
-                      {reply?.replies?.map((reply) => (
-                        <li>{reply.content}</li>
-                      ))}
-                    </ol>
-                  </li>
-                ))}
-              </ol>
-            </li>
-          ))}
-        </ol>
-      </div>
+      {comments.length > 0 && (
+        <div>
+          Comments:
+          <ol className="list-inside list-decimal">
+            {comments.map((comment: Comment) => (
+              <li>
+                {comment.content}
+                <ol className="ml-4 list-inside list-decimal">
+                  {comment?.replies?.map((reply) => (
+                    <li>
+                      {reply.content}
+                      <ol className="ml-4 list-inside list-decimal">
+                        {reply?.replies?.map((reply) => (
+                          <li>{reply.content}</li>
+                        ))}
+                      </ol>
+                    </li>
+                  ))}
+                </ol>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
     </>
   );
 }
