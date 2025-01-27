@@ -28,7 +28,7 @@ export default function Page({
   posts,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
-    <main>
+    <>
       <h2>{category.id}</h2>
       <p>{category.name}</p>
 
@@ -37,6 +37,6 @@ export default function Page({
           <li>{post.title}</li>
         ))}
       </ol>
-    </main>
+    </>
   );
 }

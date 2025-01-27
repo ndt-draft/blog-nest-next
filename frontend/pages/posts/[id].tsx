@@ -72,7 +72,7 @@ export default function Page({
   }
 
   return (
-    <div className="p-20 grid gap-4">
+    <>
       <h2>{post.title}</h2>
       <div>
         <span>Categories: </span>
@@ -107,6 +107,6 @@ export default function Page({
           ))}
         </ol>
       </div>
-    </div>
+    </>
   );
 }
