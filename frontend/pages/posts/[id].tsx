@@ -9,6 +9,7 @@ import { Category } from "@/types/category";
 import { Comment } from "@/types/comment";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import CommentList from "@/components/CommentList";
 
 export const getStaticPaths = (async () => {
   // Call an external API endpoint to get posts
@@ -85,30 +86,7 @@ export default function Page({
         </i>
       </div>
       <div>{post.content}</div>
-      {comments.length > 0 && (
-        <div>
-          Comments:
-          <ol className="list-inside list-decimal">
-            {comments.map((comment: Comment) => (
-              <li>
-                {comment.content}
-                <ol className="ml-4 list-inside list-decimal">
-                  {comment?.replies?.map((reply) => (
-                    <li>
-                      {reply.content}
-                      <ol className="ml-4 list-inside list-decimal">
-                        {reply?.replies?.map((reply) => (
-                          <li>{reply.content}</li>
-                        ))}
-                      </ol>
-                    </li>
-                  ))}
-                </ol>
-              </li>
-            ))}
-          </ol>
-        </div>
-      )}
+      <CommentList comments={comments} />
     </>
   );
 }
