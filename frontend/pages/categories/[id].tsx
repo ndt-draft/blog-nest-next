@@ -2,12 +2,13 @@ import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import { Category } from "@/types/category";
 import { Post } from "@/types/post";
 import PostList from "@/components/PostList";
+import { fetchCategory, fetchPosts } from "@/api";
 
 export const getServerSideProps = (async ({ params }) => {
   // Fetch data from external API
   const res = await Promise.all([
-    fetch(`http://localhost:3333/categories/${params?.id}`),
-    fetch(`http://localhost:3333/posts?category=${params?.id}`),
+    fetchCategory(params?.id),
+    fetchPosts({ category: params?.id }),
   ]);
 
   if (!res[0].ok) {

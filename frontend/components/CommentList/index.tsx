@@ -13,19 +13,19 @@ const CommentList: React.FC<Props> = ({ comments }) => {
           <h3>Comments:</h3>
           <ol className={`${styles.commentList} list-inside list-decimal`}>
             {comments.map((comment: Comment) => (
-              <li key={comment.id} className={styles.commentItem}>
+              <li key={comment._id} className={styles.commentItem}>
                 {comment.content}
                 <ol
                   className={`${styles.commentList} ml-4 list-inside list-decimal`}
                 >
                   {comment?.replies?.map((reply) => (
-                    <li key={reply.id} className={styles.commentItem}>
+                    <li key={reply._id} className={styles.commentItem}>
                       {reply.content}
                       <ol
                         className={`${styles.commentList} ml-4 list-inside list-decimal`}
                       >
                         {reply?.replies?.map((reply) => (
-                          <li key={reply.id} className={styles.commentItem}>
+                          <li key={reply._id} className={styles.commentItem}>
                             {reply.content}
                           </li>
                         ))}

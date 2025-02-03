@@ -1,13 +1,13 @@
 export type Comment = {
-  id: string;
+  _id: string;
   content: string;
   replies: [
     {
-      id: string;
+      _id: string;
       content: string;
       replies: [
         {
-          id: string;
+          _id: string;
           content: string;
         }
       ];

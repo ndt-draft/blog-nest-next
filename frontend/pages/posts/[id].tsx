@@ -9,10 +9,11 @@ import { Category } from "@/types/category";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import CommentList from "@/components/CommentList";
+import { fetchComments, fetchPostById, fetchPosts } from "@/api";
 
 export const getStaticPaths = (async () => {
   // Call an external API endpoint to get posts
-  const res = await fetch("http://localhost:3333/posts");
+  const res = await fetchPosts();
   const data = await res.json();
 
   // Get the paths we want to prerender based on posts
@@ -27,7 +28,9 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 export const getStaticProps = (async ({ params }) => {
-  const res = await fetch(`http://localhost:3333/posts/${params?.id}`);
+  const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
+
+  const res = await fetchPostById(id);
 
   if (!res.ok) {
     return { notFound: true };
@@ -50,10 +53,8 @@ export default function Page({
       return;
     }
 
-    const fetchComments = async () => {
-      const response = await fetch(
-        `http://localhost:3333/comments?postId=${post?.id}`
-      );
+    const fetchData = async () => {
+      const response = await fetchComments({ postId: post?.id });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -61,7 +62,7 @@ export default function Page({
       setComments(result?.comments);
     };
 
-    fetchComments().catch((e) => {
+    fetchData().catch((e) => {
       // handle the error as needed
       console.error("An error occurred while fetching the data: ", e);
     });
