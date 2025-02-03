@@ -1,6 +1,7 @@
 import { Post } from "@/types/post";
 import { GetServerSideProps } from "next";
 import PostList from "@/components/PostList";
+import { fetchPosts } from "@/api";
 
 export default function Home({ posts }: { posts: Post[] }) {
   return (
@@ -13,7 +14,7 @@ export default function Home({ posts }: { posts: Post[] }) {
 
 export const getServerSideProps = (async () => {
   // Fetch data from external API
-  const res = await fetch(`http://localhost:3333/posts`);
+  const res = await fetchPosts();
 
   if (!res.ok) {
     return { notFound: true };

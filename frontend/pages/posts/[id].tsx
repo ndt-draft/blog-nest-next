@@ -6,7 +6,6 @@ import type {
 import { Post } from "@/types/post";
 import { useRouter } from "next/router";
 import { Category } from "@/types/category";
-import { Comment } from "@/types/comment";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import CommentList from "@/components/CommentList";
@@ -47,7 +46,7 @@ export default function Page({
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    if (!post) {
+    if (!post?.id) {
       return;
     }
 
@@ -66,7 +65,7 @@ export default function Page({
       // handle the error as needed
       console.error("An error occurred while fetching the data: ", e);
     });
-  }, []);
+  }, [post.id]);
 
   if (router.isFallback) {
     return <div>Loading...</div>;
@@ -79,7 +78,11 @@ export default function Page({
         <span>Categories: </span>
         <i>
           {post.categories.map((cat: Category) => (
-            <Link className="mr-2 text-blue-600" href={`/categories/${cat.id}`}>
+            <Link
+              key={cat.id}
+              className="mr-2 text-blue-600"
+              href={`/categories/${cat.id}`}
+            >
               {cat.name},
             </Link>
           ))}
