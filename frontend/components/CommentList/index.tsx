@@ -5,7 +5,7 @@ type Props = {
   comments: Comment[];
 };
 
-const CommentList: React.FC<Props> = ({ comments }) => {
+const CommentList = ({ comments }: Props) => {
   return (
     <div>
       {comments.length > 0 && (

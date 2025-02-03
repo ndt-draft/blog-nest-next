@@ -9,7 +9,15 @@ import { Category } from "@/types/category";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import CommentList from "@/components/CommentList";
-import { fetchComments, fetchPostById, fetchPosts } from "@/api";
+import {
+  CommentCreateParams,
+  createComment,
+  fetchComments,
+  fetchPostById,
+  fetchPosts,
+} from "@/api";
+import CommentForm from "@/components/CommentForm";
+import { Comment } from "@/types/comment";
 
 export const getStaticPaths = (async () => {
   // Call an external API endpoint to get posts
@@ -46,7 +54,20 @@ export default function Page({
   post,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState<Comment[]>([]);
+
+  const onCreateComment = async (commentCreateParams: CommentCreateParams) => {
+    const res = await createComment(commentCreateParams);
+
+    if (!res.ok) {
+      return;
+    }
+
+    const comment: Comment = await res.json();
+
+    // add new comment to comment list
+    setComments([comment, ...comments]);
+  };
 
   useEffect(() => {
     if (!post?.id) {
@@ -90,6 +111,7 @@ export default function Page({
         </i>
       </div>
       <div>{post.content}</div>
+      <CommentForm postId={post.id} onSubmit={onCreateComment} />
       <CommentList comments={comments} />
     </>
   );

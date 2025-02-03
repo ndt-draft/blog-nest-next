@@ -1,4 +1,5 @@
 import auth from "@/lib/auth";
+import { isServer } from "@/lib/utils";
 import queryString from "query-string";
 
 // const apiUrl = process.env.API_URL;
@@ -13,9 +14,15 @@ export const apiFetch = async (url: string, options: FetchOptions = {}) => {
     params ? `?${queryString.stringify(params)}` : ""
   }`;
 
+  const authorization = isServer()
+    ? null
+    : {
+        Authorization: `Bearer ${auth.getItem("token")}`,
+      };
+
   const defaultHeaders: HeadersInit = {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${auth.getItem("token")}`,
+    ...(authorization || {}),
     ...(headers || {}),
   };
 
