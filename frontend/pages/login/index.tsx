@@ -1,5 +1,6 @@
 import { login, loginBody } from "@/api";
 import LoginForm from "@/components/LoginForm";
+import PageTitle from "@/components/PageTitle";
 import { useToast } from "@/hooks/use-toast";
 import auth from "@/lib/auth";
 import { useRouter } from "next/router";
@@ -49,9 +50,7 @@ const Login = () => {
 
   return (
     <>
-      <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-        Login
-      </h2>
+      <PageTitle>Login</PageTitle>
       <LoginForm onSubmit={handleLogin} />
     </>
   );

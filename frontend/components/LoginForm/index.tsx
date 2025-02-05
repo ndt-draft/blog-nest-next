@@ -26,7 +26,7 @@ type Props = {
   onSubmit: (params: z.infer<typeof formSchema>) => void | Promise<void>;
 };
 
-function LoginForm({ onSubmit, errorMessage }: Props): React.JSX.Element {
+function LoginForm({ onSubmit }: Props): React.JSX.Element {
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

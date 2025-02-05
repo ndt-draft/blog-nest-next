@@ -7,22 +7,15 @@ const Footer: React.FC = () => {
     <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
       <LogInOut />
       <a
-        className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+        className="flex items-center gap-2 hover:bg-slate-200 px-4 text-sm rounded-full h-7"
         href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
         target="_blank"
         rel="noopener noreferrer"
       >
-        <Image
-          aria-hidden
-          src="/file.svg"
-          alt="File icon"
-          width={16}
-          height={16}
-        />
         Learn
       </a>
       <a
-        className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+        className="flex items-center gap-2 hover:bg-slate-200 px-4 text-sm rounded-full h-7"
         href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
         target="_blank"
         rel="noopener noreferrer"
@@ -37,7 +30,7 @@ const Footer: React.FC = () => {
         Examples
       </a>
       <a
-        className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+        className="flex items-center gap-2 hover:bg-slate-200 px-4 text-sm rounded-full h-7"
         href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
         target="_blank"
         rel="noopener noreferrer"

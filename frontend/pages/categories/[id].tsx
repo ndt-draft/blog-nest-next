@@ -3,6 +3,7 @@ import { Category } from "@/types/category";
 import { Post } from "@/types/post";
 import PostList from "@/components/PostList";
 import { fetchCategory, fetchPosts } from "@/api";
+import PageTitle from "@/components/PageTitle";
 
 export const getServerSideProps = (async ({ params }) => {
   // Fetch data from external API
@@ -31,7 +32,7 @@ export default function Page({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
-      <h2>Category: {category.name}</h2>
+      <PageTitle>Category: {category.name}</PageTitle>
 
       <PostList posts={posts} />
     </>

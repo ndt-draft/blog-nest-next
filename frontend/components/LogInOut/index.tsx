@@ -22,7 +22,7 @@ const LogInOut = () => {
 
   return (
     <a
-      className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+      className="flex items-center gap-2 hover:bg-slate-200 px-4 text-sm rounded-full h-7"
       onClick={toggleLogin}
       href="/login"
     >

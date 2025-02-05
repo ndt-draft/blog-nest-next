@@ -18,6 +18,7 @@ import {
 } from "@/api";
 import CommentForm from "@/components/CommentForm";
 import { Comment } from "@/types/comment";
+import PageTitle from "@/components/PageTitle";
 
 export const getStaticPaths = (async () => {
   // Call an external API endpoint to get posts
@@ -95,7 +96,7 @@ export default function Page({
 
   return (
     <>
-      <h2>{post.title}</h2>
+      <PageTitle>{post.title}</PageTitle>
       <div>
         <span>Categories: </span>
         <i>

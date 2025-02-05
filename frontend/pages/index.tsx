@@ -2,11 +2,12 @@ import { Post } from "@/types/post";
 import { GetServerSideProps } from "next";
 import PostList from "@/components/PostList";
 import { fetchPosts } from "@/api";
+import PageTitle from "@/components/PageTitle";
 
 export default function Home({ posts }: { posts: Post[] }) {
   return (
     <>
-      <h2>Posts</h2>
+      <PageTitle>Posts</PageTitle>
       <PostList posts={posts} />
     </>
   );
