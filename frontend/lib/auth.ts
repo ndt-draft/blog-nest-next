@@ -2,12 +2,15 @@ const BLOG_AUTH = "BLOG_AUTH";
 
 const auth = {
   get: () => {
-    try {
-      const authData = JSON.parse(localStorage.getItem(BLOG_AUTH) || "");
-      return authData;
-    } catch (e) {
-      console.log("error get auth", e);
+    if (typeof window !== "undefined") {
+      try {
+        const authData = JSON.parse(localStorage.getItem(BLOG_AUTH) || "");
+        return authData;
+      } catch (e) {
+        console.log("error get auth", e);
+      }
     }
+
     return {};
   },
   set: (data: object) => {
@@ -16,6 +19,9 @@ const auth = {
     } catch (e) {
       console.log("error set auth", e);
     }
+  },
+  clear: () => {
+    localStorage.removeItem(BLOG_AUTH);
   },
   getItem: (key: string) => {
     try {
