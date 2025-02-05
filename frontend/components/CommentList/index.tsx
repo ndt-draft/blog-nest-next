@@ -1,5 +1,5 @@
 import { Comment } from "@/types/comment";
-import styles from "./CommentList.module.css";
+import { StyledOL } from "./style";
 
 type Props = {
   comments: Comment[];
@@ -11,31 +11,25 @@ const CommentList = ({ comments }: Props) => {
       {comments.length > 0 && (
         <>
           <h3>Comments:</h3>
-          <ol className={`${styles.commentList} list-inside list-decimal`}>
+          <StyledOL className={`list-inside list-decimal`}>
             {comments.map((comment: Comment) => (
-              <li key={comment._id} className={styles.commentItem}>
+              <li key={comment._id}>
                 {comment.content}
-                <ol
-                  className={`${styles.commentList} ml-4 list-inside list-decimal`}
-                >
+                <StyledOL className={`ml-4 list-inside list-decimal`}>
                   {comment?.replies?.map((reply) => (
-                    <li key={reply._id} className={styles.commentItem}>
+                    <li key={reply._id}>
                       {reply.content}
-                      <ol
-                        className={`${styles.commentList} ml-4 list-inside list-decimal`}
-                      >
+                      <StyledOL className={`ml-4 list-inside list-decimal`}>
                         {reply?.replies?.map((reply) => (
-                          <li key={reply._id} className={styles.commentItem}>
-                            {reply.content}
-                          </li>
+                          <li key={reply._id}>{reply.content}</li>
                         ))}
-                      </ol>
+                      </StyledOL>
                     </li>
                   ))}
-                </ol>
+                </StyledOL>
               </li>
             ))}
-          </ol>
+          </StyledOL>
         </>
       )}
     </div>
