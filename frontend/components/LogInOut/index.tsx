@@ -10,7 +10,7 @@ const LogInOut = () => {
     setIsAuthenticated(auth.loggedIn());
   }, [router.pathname]);
 
-  const toggleLogin = (e: React.FormEvent<HTMLAnchorElement>) => {
+  const toggleLogin = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
 
     if (isAuthenticated) {
