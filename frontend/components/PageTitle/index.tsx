@@ -17,7 +17,7 @@ export function H3({ children }: { children: ReactNode }) {
 }
 
 type PageTitleProps = {
-  type: "h2" | "h3" | null;
+  type?: "h2" | "h3";
   children: ReactNode;
 };
 
