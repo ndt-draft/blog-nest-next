@@ -22,14 +22,23 @@ const formSchema = z.object({
   }),
 });
 
-type FormData = z.infer<typeof formSchema> & { postId: number };
+type FormData = z.infer<typeof formSchema> & { postId: number } & {
+  parentId?: string;
+};
 
 type Props = {
   postId: number;
+  parentId?: string;
   onSubmit: (params: FormData) => void | Promise<void>;
+  setCommentFormMode?: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-function CommentForm({ postId, onSubmit }: Props) {
+function CommentForm({
+  postId,
+  parentId,
+  onSubmit,
+  setCommentFormMode,
+}: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,9 +46,16 @@ function CommentForm({ postId, onSubmit }: Props) {
     },
   });
 
+  function onCancel() {
+    if (typeof setCommentFormMode === "function") {
+      setCommentFormMode(null);
+    }
+  }
+
   function onSubmitForm(data: z.infer<typeof formSchema>) {
     onSubmit({
       postId,
+      parentId,
       ...data,
     });
 
@@ -74,6 +90,16 @@ function CommentForm({ postId, onSubmit }: Props) {
           )}
         />
         <Button type="submit">Submit</Button>
+        {parentId && (
+          <Button
+            type="button"
+            variant="secondary"
+            className="ml-4"
+            onClick={onCancel}
+          >
+            Cancel
+          </Button>
+        )}
       </form>
     </Form>
   );
