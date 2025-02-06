@@ -24,7 +24,7 @@ const LogInOut = () => {
     <a
       className="flex items-center gap-2 hover:bg-slate-200 px-4 text-sm rounded-full h-7"
       onClick={toggleLogin}
-      href="/login"
+      href="#"
     >
       {isAuthenticated ? "Logout" : "Login"}
     </a>

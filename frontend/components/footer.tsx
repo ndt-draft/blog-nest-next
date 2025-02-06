@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import LogInOut from "./LogInOut";
 
 const Footer: React.FC = () => {

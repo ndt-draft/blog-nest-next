@@ -42,7 +42,7 @@ const Login = () => {
     } else {
       setIsLoading(false);
     }
-  }, []);
+  }, [isLoggedIn, router]);
 
   if (isLoading) {
     return <div>Loading...</div>;

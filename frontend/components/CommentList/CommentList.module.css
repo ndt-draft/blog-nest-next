@@ -1,0 +1,14 @@
+.commentList {
+  @apply list-inside list-decimal;
+  counter-reset: item;
+}
+
+.commentItem {
+  display: block;
+}
+
+.commentItem:before {
+  content: counters(item, ".") ".";
+  counter-increment: item;
+  padding-right: 10px;
+}
