@@ -30,14 +30,14 @@ type Props = {
   postId: number;
   parentId?: string;
   onSubmit: (params: FormData) => void | Promise<void>;
-  setCommentFormMode?: React.Dispatch<React.SetStateAction<string | null>>;
+  setCommentParentId?: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 function CommentForm({
   postId,
   parentId,
   onSubmit,
-  setCommentFormMode,
+  setCommentParentId,
 }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,8 +47,8 @@ function CommentForm({
   });
 
   function onCancel() {
-    if (typeof setCommentFormMode === "function") {
-      setCommentFormMode(null);
+    if (typeof setCommentParentId === "function") {
+      setCommentParentId(null);
     }
   }
 

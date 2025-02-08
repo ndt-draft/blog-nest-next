@@ -6,21 +6,21 @@ import { CommentCreateParams } from "@/api";
 
 type Props = {
   comments: Comment[];
-  commentFormMode: string | null;
+  commentParentId: string | null;
   onCreateComment: (params: CommentCreateParams) => void | Promise<void>;
-  setCommentFormMode: React.Dispatch<React.SetStateAction<string | null>>;
+  setCommentParentId: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 const CommentList = ({
   comments,
-  commentFormMode,
+  commentParentId,
   onCreateComment,
-  setCommentFormMode,
+  setCommentParentId,
 }: Props) => {
   const onReply =
     ({ _id }: { _id: string }) =>
     () => {
-      setCommentFormMode(_id);
+      setCommentParentId(_id);
     };
 
   if (comments.length <= 0) {
@@ -40,13 +40,13 @@ const CommentList = ({
             >
               Reply
             </span>
-            {commentFormMode === comment._id && (
+            {commentParentId === comment._id && (
               <div className="mb-2">
                 <CommentForm
                   postId={comment.postId}
                   parentId={comment._id}
                   onSubmit={onCreateComment}
-                  setCommentFormMode={setCommentFormMode}
+                  setCommentParentId={setCommentParentId}
                 />
               </div>
             )}
@@ -60,12 +60,12 @@ const CommentList = ({
                   >
                     Reply
                   </span>
-                  {commentFormMode === reply._id && (
+                  {commentParentId === reply._id && (
                     <CommentForm
                       postId={reply.postId}
                       parentId={reply._id}
                       onSubmit={onCreateComment}
-                      setCommentFormMode={setCommentFormMode}
+                      setCommentParentId={setCommentParentId}
                     />
                   )}
                   <ol className={`${styles.commentList} ml-4`}>

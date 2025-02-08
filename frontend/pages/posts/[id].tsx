@@ -56,7 +56,7 @@ export default function Page({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
   const [comments, setComments] = useState<Comment[]>([]);
-  const [commentFormMode, setCommentFormMode] = useState<string | null>(null);
+  const [commentParentId, setCommentParentId] = useState<string | null>(null);
 
   const onCreateComment = async (commentCreateParams: CommentCreateParams) => {
     const res = await createComment(commentCreateParams);
@@ -113,18 +113,18 @@ export default function Page({
         </i>
       </div>
       <div>{post.content}</div>
-      {!commentFormMode && (
+      {!commentParentId && (
         <CommentForm
           postId={post.id}
           onSubmit={onCreateComment}
-          setCommentFormMode={setCommentFormMode}
+          setCommentParentId={setCommentParentId}
         />
       )}
       <CommentList
         comments={comments}
-        commentFormMode={commentFormMode}
+        commentParentId={commentParentId}
         onCreateComment={onCreateComment}
-        setCommentFormMode={setCommentFormMode}
+        setCommentParentId={setCommentParentId}
       />
     </>
   );
