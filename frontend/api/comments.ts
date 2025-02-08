@@ -7,7 +7,7 @@ type CommentsParams = {
 export type CommentCreateParams = {
   postId: number;
   content: string;
-  parentId?: string;
+  parentId: string | null;
 };
 
 export const fetchComments = (params?: CommentsParams) => {

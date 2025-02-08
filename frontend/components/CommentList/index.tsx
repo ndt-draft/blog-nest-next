@@ -2,21 +2,11 @@ import { Comment } from "@/types/comment";
 import styles from "./CommentList.module.css";
 import PageTitle from "../PageTitle";
 import CommentForm from "../CommentForm";
-import { CommentCreateParams } from "@/api";
+import { useComments } from "../CommentsProvider";
 
-type Props = {
-  comments: Comment[];
-  commentParentId: string | null;
-  onCreateComment: (params: CommentCreateParams) => void | Promise<void>;
-  setCommentParentId: React.Dispatch<React.SetStateAction<string | null>>;
-};
+const CommentList = () => {
+  const { comments, commentParentId, setCommentParentId } = useComments();
 
-const CommentList = ({
-  comments,
-  commentParentId,
-  onCreateComment,
-  setCommentParentId,
-}: Props) => {
   const onReply =
     ({ _id }: { _id: string }) =>
     () => {
@@ -42,12 +32,7 @@ const CommentList = ({
             </span>
             {commentParentId === comment._id && (
               <div className="mb-2">
-                <CommentForm
-                  postId={comment.postId}
-                  parentId={comment._id}
-                  onSubmit={onCreateComment}
-                  setCommentParentId={setCommentParentId}
-                />
+                <CommentForm />
               </div>
             )}
             <ol className={`${styles.commentList} ml-4`}>
@@ -62,12 +47,7 @@ const CommentList = ({
                   </span>
                   {commentParentId === reply._id && (
                     <div className="mb-2">
-                      <CommentForm
-                        postId={reply.postId}
-                        parentId={reply._id}
-                        onSubmit={onCreateComment}
-                        setCommentParentId={setCommentParentId}
-                      />
+                      <CommentForm />
                     </div>
                   )}
                   <ol className={`${styles.commentList} ml-4`}>

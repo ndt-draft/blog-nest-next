@@ -15,6 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
+import { useComments } from "../CommentsProvider";
 
 const formSchema = z.object({
   content: z.string({}).trim().min(1, {
@@ -22,29 +23,20 @@ const formSchema = z.object({
   }),
 });
 
-type FormData = z.infer<typeof formSchema> & { postId: number } & {
-  parentId?: string;
-};
-
-type Props = {
-  postId: number;
-  parentId?: string;
-  onSubmit: (params: FormData) => void | Promise<void>;
-  setCommentParentId?: React.Dispatch<React.SetStateAction<string | null>>;
-};
-
-function CommentForm({
-  postId,
-  parentId,
-  onSubmit,
-  setCommentParentId,
-}: Props) {
+function CommentForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       content: "",
     },
   });
+
+  const {
+    postId,
+    commentParentId: parentId,
+    onCreateComment,
+    setCommentParentId,
+  } = useComments();
 
   function onCancel() {
     if (typeof setCommentParentId === "function") {
@@ -53,7 +45,7 @@ function CommentForm({
   }
 
   function onSubmitForm(data: z.infer<typeof formSchema>) {
-    onSubmit({
+    onCreateComment({
       postId,
       parentId,
       ...data,
