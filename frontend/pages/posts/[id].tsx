@@ -6,7 +6,7 @@ import type {
 import { Post } from "@/types/post";
 import { useRouter } from "next/router";
 import { Category } from "@/types/category";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import CommentList from "@/components/CommentList";
 import {
@@ -58,6 +58,15 @@ export default function Page({
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentParentId, setCommentParentId] = useState<string | null>(null);
 
+  const fetchData = useCallback(async () => {
+    const response = await fetchComments({ postId: post?.id });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const result = await response.json();
+    setComments(result?.comments);
+  }, [post?.id]);
+
   const onCreateComment = async (commentCreateParams: CommentCreateParams) => {
     const res = await createComment(commentCreateParams);
 
@@ -65,10 +74,14 @@ export default function Page({
       return;
     }
 
-    const comment: Comment = await res.json();
+    // close comment form reply
+    setCommentParentId(null);
 
-    // add new comment to comment list
-    setComments([comment, ...comments]);
+    // refetch comments again for rightful order
+    fetchData().catch((e) => {
+      // handle the error as needed
+      console.error("An error occurred while fetching the data: ", e);
+    });
   };
 
   useEffect(() => {
@@ -76,20 +89,11 @@ export default function Page({
       return;
     }
 
-    const fetchData = async () => {
-      const response = await fetchComments({ postId: post?.id });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const result = await response.json();
-      setComments(result?.comments);
-    };
-
     fetchData().catch((e) => {
       // handle the error as needed
       console.error("An error occurred while fetching the data: ", e);
     });
-  }, [post.id]);
+  }, [post.id, fetchData]);
 
   if (router.isFallback) {
     return <div>Loading...</div>;
