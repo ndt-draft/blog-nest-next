@@ -61,12 +61,14 @@ const CommentList = ({
                     Reply
                   </span>
                   {commentParentId === reply._id && (
-                    <CommentForm
-                      postId={reply.postId}
-                      parentId={reply._id}
-                      onSubmit={onCreateComment}
-                      setCommentParentId={setCommentParentId}
-                    />
+                    <div className="mb-2">
+                      <CommentForm
+                        postId={reply.postId}
+                        parentId={reply._id}
+                        onSubmit={onCreateComment}
+                        setCommentParentId={setCommentParentId}
+                      />
+                    </div>
                   )}
                   <ol className={`${styles.commentList} ml-4`}>
                     {reply?.replies?.map((reply) => (
