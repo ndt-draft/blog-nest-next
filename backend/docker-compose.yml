@@ -1,0 +1,54 @@
+services:
+  app:
+    build: .
+    container_name: nestjs_app
+    depends_on:
+      - postgres
+      - mongodb
+    ports:
+      - '3334:3333'
+    env_file:
+      - .env
+    environment:
+      - PORT=3333
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASS=postgres
+      - DB_NAME=blog
+      - MONGODB_URI=mongodb://mongodb:27017/blog
+    networks:
+      - app_network
+
+  postgres:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    ports:
+      - '5433:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: blog
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  mongodb:
+    image: mongo:6
+    container_name: mongodb
+    restart: always
+    ports:
+      - '27018:27017'
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - app_network
+
+networks:
+  app_network:
+
+volumes:
+  postgres_data:
+  mongo_data:
