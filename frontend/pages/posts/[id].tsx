@@ -58,13 +58,14 @@ export default function Page({
         <span className="font-semibold">Categories: </span>
         <i>
           {post.categories.length > 0
-            ? post.categories.map((cat: Category) => (
+            ? post.categories.map((cat: Category, index: number) => (
                 <Link
                   key={cat.id}
                   className="mr-2 text-blue-600"
                   href={`/categories/${cat.id}`}
                 >
                   {cat.name}
+                  {index < post.categories.length - 1 && ","}
                 </Link>
               ))
             : "No categories"}
