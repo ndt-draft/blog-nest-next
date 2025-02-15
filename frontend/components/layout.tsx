@@ -1,16 +1,18 @@
 import Navbar from "./navbar";
 import Footer from "./footer";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Poppins, Slabo_27px } from "next/font/google";
 import React, { ReactNode } from "react";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
+  weight: ["400", "600"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const slabo = Slabo_27px({
+  variable: "--font-slabo",
   subsets: ["latin"],
+  weight: ["400"],
 });
 
 interface LayoutProps {
@@ -20,7 +22,7 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   return (
     <div
-      className={`${geistSans.variable} ${geistMono.variable} min-h-screen w-1/2 mx-auto font-[family-name:var(--font-geist-sans)]`}
+      className={`${poppins.variable} ${slabo.variable} min-h-screen w-1/2 mx-auto font-[family-name:var(--font-poppins)]`}
     >
       <main className="">
         <Navbar />

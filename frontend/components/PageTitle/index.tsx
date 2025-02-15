@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 export function H2({ children }: { children: ReactNode }) {
   return (
-    <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+    <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 font-[family-name:var(--font-slabo)]">
       {children}
     </h2>
   );
@@ -10,7 +10,7 @@ export function H2({ children }: { children: ReactNode }) {
 
 export function H3({ children }: { children: ReactNode }) {
   return (
-    <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+    <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight font-[family-name:var(--font-slabo)]">
       {children}
     </h3>
   );

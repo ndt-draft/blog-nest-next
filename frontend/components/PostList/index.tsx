@@ -7,13 +7,21 @@ type Props = {
 
 const PostList: React.FC<Props> = ({ posts }) => {
   return (
-    <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
+    <div className="font-[family-name:var(--font-popppins)]">
       {posts.map((post: Post) => (
-        <li key={post.id} className="mb-2">
-          <Link href={`/posts/${post.id}`}>{post.title}</Link>
-        </li>
+        <Link href={`/posts/${post.id}`}>
+          <div
+            className="border border-zinc-300 mb-2 p-2 rounded-sm"
+            key={post.id}
+          >
+            <span className="font-[family-name:var(--font-poppins)] font-semibold">
+              {post.title}
+            </span>
+            <div>{post.content}</div>
+          </div>
+        </Link>
       ))}
-    </ol>
+    </div>
   );
 };
 
