@@ -70,6 +70,9 @@ $ npm run typeorm migration:run
 
 # revert migration
 $ npm run typeorm migration:revert
+
+# show migrations
+$ npm run typeorm migration:show
 ```
 
 ## Seed data
