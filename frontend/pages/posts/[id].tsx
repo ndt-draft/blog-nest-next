@@ -55,17 +55,19 @@ export default function Page({
     <>
       <PageTitle>{post.title}</PageTitle>
       <div>
-        <span>Categories: </span>
+        <span className="font-semibold">Categories: </span>
         <i>
-          {post.categories.map((cat: Category) => (
-            <Link
-              key={cat.id}
-              className="mr-2 text-blue-600"
-              href={`/categories/${cat.id}`}
-            >
-              {cat.name},
-            </Link>
-          ))}
+          {post.categories.length > 0
+            ? post.categories.map((cat: Category) => (
+                <Link
+                  key={cat.id}
+                  className="mr-2 text-blue-600"
+                  href={`/categories/${cat.id}`}
+                >
+                  {cat.name}
+                </Link>
+              ))
+            : "No categories"}
         </i>
       </div>
       <div>{post.content}</div>
