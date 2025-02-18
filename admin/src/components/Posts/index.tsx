@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/button";
 
 const Posts = () => (
   <div>
-    <Button className="cursor-pointer">Posts</Button>
+    <h1 className="text-3xl font-bold underline mb-4">Posts</h1>
+    <Button className="cursor-pointer">Create New Post</Button>
   </div>
 );
 
