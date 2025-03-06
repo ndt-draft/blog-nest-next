@@ -11,6 +11,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { plainToInstance } from 'class-transformer';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -30,6 +31,13 @@ export class UsersService {
         `User with email ${createUserDto.email} already exists`,
       );
     }
+
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(
+      createUserDto.password,
+      saltRounds,
+    );
+    createUserDto.password = hashedPassword;
 
     const user = this.userRepository.create(createUserDto);
     await this.userRepository.save(user);
