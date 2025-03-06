@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router";
+import { handleLogin } from "@/api/auth";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -38,6 +39,16 @@ function Login(): React.JSX.Element {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+
+    handleLogin(values)
+      .then((response) => {
+        // Handle successful login
+        console.log("Login successful:", response);
+      })
+      .catch((error) => {
+        // Handle login error
+        console.error("Login failed:", error);
+      });
   }
 
   return (
