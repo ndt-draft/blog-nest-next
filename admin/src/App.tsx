@@ -19,6 +19,9 @@ function App() {
         <Link className="text-blue-600" to="posts">
           Link to Posts
         </Link>
+        <Link className="text-blue-600 ml-2" to="login">
+          Login
+        </Link>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
