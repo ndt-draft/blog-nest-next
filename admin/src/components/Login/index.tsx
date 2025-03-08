@@ -58,7 +58,7 @@ function Login(): React.JSX.Element {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmitForm)}
-        className="w-2/3 space-y-8 m-auto"
+        className="w-80 space-y-8 m-auto"
       >
         <FormField
           control={form.control}

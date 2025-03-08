@@ -4,7 +4,7 @@ const auth = {
   get: () => {
     if (typeof window !== "undefined") {
       try {
-        const authData = JSON.parse(localStorage.getItem(BLOG_AUTH) || "");
+        const authData = JSON.parse(localStorage.getItem(BLOG_AUTH) || "{}");
         return authData;
       } catch (e) {
         console.log("error get auth", e);

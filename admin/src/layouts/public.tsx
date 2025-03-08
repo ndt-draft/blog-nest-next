@@ -13,7 +13,7 @@ const PublicLayout = () => {
   }, []);
 
   return (
-    <div>
+    <div className="flex place-items-center justify-center h-screen text-center">
       <Outlet /> {/* This will render the nested routes */}
     </div>
   );
