@@ -12,8 +12,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router";
-import { handleLogin } from "@/api/auth";
+import { Link, useNavigate } from "react-router";
+import { handleLogin } from "@/api";
+import auth from "@/lib/auth";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -34,21 +35,23 @@ function Login(): React.JSX.Element {
     },
   });
 
+  const navigate = useNavigate();
+
   // 2. Define a submit handler.
-  function onSubmitForm(values: z.infer<typeof formSchema>) {
+  async function onSubmitForm(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    try {
+      const res = await handleLogin(values);
+      const data = await res.json();
 
-    handleLogin(values)
-      .then((response) => {
-        // Handle successful login
-        console.log("Login successful:", response);
-      })
-      .catch((error) => {
-        // Handle login error
-        console.error("Login failed:", error);
-      });
+      auth.set({ token: data.access_token });
+
+      // Handle successful login
+      navigate("/admin");
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
