@@ -6,7 +6,7 @@ const backendUri = import.meta.env.VITE_BACKEND_URI;
 
 type FetchOptions = RequestInit & { params?: Record<string, any> };
 
-export const apiFetch = async (url: string, options: FetchOptions = {}) => {
+export const apiFetch = (url: string, options: FetchOptions = {}) => {
   const { params, headers, ...restOptions } = options;
 
   const fullUrl = `${backendUri}${url}${

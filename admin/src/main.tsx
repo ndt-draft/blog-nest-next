@@ -8,7 +8,8 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import PrivateLayout from "@/layouts/private";
 import PublicLayout from "@/layouts/public";
 import Categories from "@/components/Categories";
-import Logout from "./components/Logout";
+import Logout from "@/components/Logout";
+import PostDetail from "@/components/Posts/PostDetail";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -21,6 +22,7 @@ createRoot(document.getElementById("root")!).render(
         <Route path="admin" element={<PrivateLayout />}>
           <Route index element={<Posts />} />
           <Route path="posts" element={<Posts />} />
+          <Route path="posts/:id" element={<PostDetail />} />
           <Route path="categories" element={<Categories />} />
           <Route path="logout" element={<Logout />} />
         </Route>
