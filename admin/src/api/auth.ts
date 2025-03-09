@@ -1,12 +1,15 @@
 import { apiFetch } from "./fetch";
 
-export function handleLogin(credentials: { email: string; password: string }) {
+export async function handleLogin(credentials: {
+  email: string;
+  password: string;
+}) {
   return apiFetch("/auth/login", {
     method: "POST",
     body: JSON.stringify(credentials),
   });
 }
 
-export function handleProfile() {
+export async function handleProfile() {
   return apiFetch("/auth/profile", { method: "GET" });
 }

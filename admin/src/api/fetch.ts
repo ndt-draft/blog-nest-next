@@ -6,7 +6,7 @@ const backendUri = import.meta.env.VITE_BACKEND_URI;
 
 type FetchOptions = RequestInit & { params?: Record<string, any> };
 
-export const apiFetch = (url: string, options: FetchOptions = {}) => {
+export const apiFetch = async (url: string, options: FetchOptions = {}) => {
   const { params, headers, ...restOptions } = options;
 
   const fullUrl = `${backendUri}${url}${
@@ -23,8 +23,16 @@ export const apiFetch = (url: string, options: FetchOptions = {}) => {
     ...(headers || {}),
   };
 
-  return fetch(fullUrl, {
+  const response = await fetch(fullUrl, {
     ...restOptions,
     headers: defaultHeaders,
   });
+
+  if (!response.ok) {
+    // Handle HTTP errors
+    const error = await response.json();
+    throw new Error(error.message || "API request failed");
+  }
+
+  return response.json();
 };

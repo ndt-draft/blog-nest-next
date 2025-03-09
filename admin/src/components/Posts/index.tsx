@@ -1,25 +1,17 @@
 import { getPosts } from "@/api";
-import { Button } from "@/components/ui/button";
 import { Post } from "@/types/post";
-import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import PostList from "./PostList";
+import useSWR from "swr";
+import { Button } from "@/components/ui/button";
 
 const Posts = () => {
-  let [posts, setPosts] = useState<Post[]>([]);
+  const { data, error } = useSWR<{ posts: Post[] }>("/api/posts", () =>
+    getPosts()
+  );
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await getPosts();
-        const data = await res.json();
-        setPosts(data.posts);
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    fetchData();
-  }, []);
+  if (error) return <div>Failed to load posts</div>;
+  if (!data) return <div>Loading...</div>;
 
   return (
     <div>
@@ -27,7 +19,7 @@ const Posts = () => {
       <Button className="cursor-pointer" asChild>
         <Link to="/admin/posts/new">Create New Post</Link>
       </Button>
-      <PostList posts={posts} />
+      <PostList posts={data.posts} />
     </div>
   );
 };

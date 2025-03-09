@@ -42,8 +42,7 @@ function Login(): React.JSX.Element {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     try {
-      const res = await handleLogin(values);
-      const data = await res.json();
+      const data = await handleLogin(values);
 
       auth.set({ token: data.access_token });
 
