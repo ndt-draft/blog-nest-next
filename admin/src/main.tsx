@@ -2,14 +2,18 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App";
-import Posts from "@/components/Posts";
-import Login from "@/components/Login";
 import { BrowserRouter, Route, Routes } from "react-router";
 import PrivateLayout from "@/layouts/private";
 import PublicLayout from "@/layouts/public";
-import Categories from "@/components/Categories";
 import Logout from "@/components/Logout";
-import PostDetail from "@/components/Posts/PostDetail";
+import AsyncComponent from "@/components/AsyncComponent";
+
+const Login = AsyncComponent(() => import("@/components/Login"));
+const Posts = AsyncComponent(() => import("@/components/Posts"));
+const PostDetail = AsyncComponent(
+  () => import("@/components/Posts/PostDetail")
+);
+const Categories = AsyncComponent(() => import("@/components/Categories"));
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
