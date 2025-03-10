@@ -9,7 +9,7 @@ const PrivateLayout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (false) {
+    if (!auth.loggedIn()) {
       navigate("/login");
     }
   }, []);
