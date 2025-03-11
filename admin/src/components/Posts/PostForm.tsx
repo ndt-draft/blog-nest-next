@@ -25,14 +25,16 @@ type PostFormValues = z.infer<typeof postSchema>;
 
 type PostFormProps = {
   onSubmit: (data: CreatePostDto) => void;
+  defaultValues?: Partial<PostFormValues>;
 };
 
-const PostForm = ({ onSubmit }: PostFormProps) => {
+const PostForm = ({ onSubmit, defaultValues }: PostFormProps) => {
   const form = useForm<PostFormValues>({
     resolver: zodResolver(postSchema),
     defaultValues: {
       title: "",
       content: "",
+      ...defaultValues,
     },
   });
 
@@ -41,6 +43,7 @@ const PostForm = ({ onSubmit }: PostFormProps) => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
         <FormField
           name="title"
+          control={form.control}
           render={({ field }) => (
             <FormItem>
               <FormLabel>Title</FormLabel>
@@ -54,6 +57,7 @@ const PostForm = ({ onSubmit }: PostFormProps) => {
         />
         <FormField
           name="content"
+          control={form.control}
           render={({ field }) => (
             <FormItem>
               <FormLabel>Content</FormLabel>

@@ -11,6 +11,7 @@ const PostList = ({ posts }: Props) => {
       {posts.map((post) => (
         <li key={post.id}>
           <Link to={`/admin/posts/${post.id}`}>{post.title}</Link>
+          <Link to={`/admin/posts/${post.id}/edit`}>Edit</Link>
         </li>
       ))}
     </ul>
