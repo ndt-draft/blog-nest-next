@@ -6,3 +6,6 @@ export type Post = {
   content: string;
   categories: Category[];
 };
+
+export type CreatePostDto = Partial<Omit<Post, "id">>;
+export type UpdatePostDto = CreatePostDto;

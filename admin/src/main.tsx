@@ -13,6 +13,7 @@ const Posts = AsyncComponent(() => import("@/components/Posts"));
 const PostDetail = AsyncComponent(
   () => import("@/components/Posts/PostDetail")
 );
+const PostNew = AsyncComponent(() => import("@/components/Posts/PostNew"));
 const Categories = AsyncComponent(() => import("@/components/Categories"));
 
 createRoot(document.getElementById("root")!).render(
@@ -26,6 +27,7 @@ createRoot(document.getElementById("root")!).render(
         <Route path="admin" element={<PrivateLayout />}>
           <Route index element={<Posts />} />
           <Route path="posts" element={<Posts />} />
+          <Route path="posts/new" element={<PostNew />} />
           <Route path="posts/:id" element={<PostDetail />} />
           <Route path="categories" element={<Categories />} />
           <Route path="logout" element={<Logout />} />
