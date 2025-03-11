@@ -53,6 +53,9 @@ export class PostsService {
     // Apply pagination
     queryBuilder.skip(page * limit).take(limit);
 
+    // Order by new to old
+    queryBuilder.orderBy('created_at', 'DESC')
+
     // Execute the query to get posts
     const [rawPosts, total] = await queryBuilder.getManyAndCount();
 
@@ -101,11 +104,14 @@ export class PostsService {
     const user = await this.userRepository.findOneBy({
       id: req.user.id,
     });
-    const categories = await this.categoryRepository.find({
-      where: {
-        id: In(createPostDto.categories),
-      },
-    });
+    let categories = []
+    if (createPostDto.categories) {
+      let categories = await this.categoryRepository.find({
+        where: {
+          id: In(createPostDto.categories),
+        },
+      });
+    }
     if (!user) {
       throw new NotFoundException(`User with ID ${req.user.id} not found`);
     }
