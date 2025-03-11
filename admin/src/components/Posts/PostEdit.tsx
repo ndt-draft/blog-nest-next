@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { getPost, updatePost } from "@/api/posts";
 import PostForm from "./PostForm";
