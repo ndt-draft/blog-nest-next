@@ -1,7 +1,7 @@
 import { getPosts } from "@/api";
 import { PostPagination, Post } from "@/types/post";
 import { Link } from "react-router";
-import PostList from "./PostList";
+import PostTable from "./PostTable";
 import useSWR from "swr";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,16 +34,20 @@ const Posts = () => {
   return (
     <div>
       <h1 className="text-3xl font-bold underline mb-4">Posts</h1>
-      <Button className="cursor-pointer" asChild>
+      <Button className="cursor-pointer mb-4" asChild>
         <Link to="/admin/posts/new">Create New Post</Link>
       </Button>
-      <PostList posts={data.posts} />
-      <Pagination>
+      <PostTable posts={data.posts} /> {/* Updated to PostTable */}
+      <Pagination className="mt-4">
         <PaginationContent>
-          <PaginationPrevious onClick={() => handleChangePage(page - 1)} />
+          <PaginationPrevious
+            className="cursor-pointer"
+            onClick={() => handleChangePage(page - 1)}
+          />
           {[...Array(totalPages)].map((_, index) => (
             <PaginationItem key={index}>
               <PaginationLink
+                className="cursor-pointer"
                 isActive={page === index}
                 onClick={() => handleChangePage(index)}
               >
@@ -51,7 +55,10 @@ const Posts = () => {
               </PaginationLink>
             </PaginationItem>
           ))}
-          <PaginationNext onClick={() => handleChangePage(page + 1)} />
+          <PaginationNext
+            className="cursor-pointer"
+            onClick={() => handleChangePage(page + 1)}
+          />
         </PaginationContent>
       </Pagination>
     </div>

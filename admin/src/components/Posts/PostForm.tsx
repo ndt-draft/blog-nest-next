@@ -39,7 +39,10 @@ const PostForm = ({ onSubmit, defaultValues }: PostFormProps) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-full lg:w-1/2 space-y-6"
+      >
         <FormField
           name="title"
           control={form.control}

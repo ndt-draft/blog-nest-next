@@ -75,6 +75,9 @@ export class PostsService {
           email: true,
         },
       },
+      order: {
+        created_at: 'DESC',
+      },
     });
 
     const contents = await this.postModel.find({
