@@ -54,7 +54,7 @@ export class PostsService {
     queryBuilder.skip(page * limit).take(limit);
 
     // Order by new to old
-    queryBuilder.orderBy('created_at', 'DESC')
+    queryBuilder.orderBy('post.created_at', 'DESC');
 
     // Execute the query to get posts
     const [rawPosts, total] = await queryBuilder.getManyAndCount();
@@ -74,9 +74,6 @@ export class PostsService {
           name: true,
           email: true,
         },
-      },
-      order: {
-        created_at: 'DESC',
       },
     });
 
@@ -104,7 +101,7 @@ export class PostsService {
     const user = await this.userRepository.findOneBy({
       id: req.user.id,
     });
-    let categories = []
+    let categories = [];
     if (createPostDto.categories) {
       let categories = await this.categoryRepository.find({
         where: {

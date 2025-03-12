@@ -24,7 +24,14 @@ const PostEdit = () => {
 
   if (!post) return <div>Loading...</div>;
 
-  return <PostForm onSubmit={handleSubmit} defaultValues={post} />;
+  return (
+    <div>
+      <h1 className="text-3xl font-bold underline mb-4">
+        Edit Post: {post.title}
+      </h1>
+      <PostForm onSubmit={handleSubmit} defaultValues={post} />
+    </div>
+  );
 };
 
 export default PostEdit;

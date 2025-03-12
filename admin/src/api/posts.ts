@@ -1,8 +1,12 @@
 import { apiFetch } from "./fetch";
-import { CreatePostDto, UpdatePostDto } from "@/types/post";
+import { CreatePostDto, UpdatePostDto, PostParams } from "@/types/post";
 
-export async function getPosts() {
-  return apiFetch("/posts", { method: "GET" });
+export async function getPosts(params: PostParams) {
+  const { page = 0, limit = 10, s, category } = params;
+  let query = `/posts?page=${page}&limit=${limit}`;
+  if (s) query += `&s=${s}`;
+  if (category !== undefined) query += `&category=${category}`;
+  return apiFetch(query, { method: "GET" });
 }
 
 export async function getPost(id: string) {
