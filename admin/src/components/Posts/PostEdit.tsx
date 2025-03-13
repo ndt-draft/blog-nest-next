@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router";
 import { getPost, updatePost } from "@/api/posts";
 import PostForm from "./PostForm";
 import { UpdatePostDto } from "@/types/post";
+import { toast } from "sonner";
 
 const PostEdit = () => {
   const { id } = useParams<{ id: string }>();
@@ -18,8 +19,13 @@ const PostEdit = () => {
   }, [id]);
 
   const handleSubmit = async (data: UpdatePostDto) => {
-    await updatePost(id!, data);
-    navigate(`/admin/posts`);
+    try {
+      await updatePost(id!, data);
+      navigate(`/admin/posts`);
+      toast.success("Post updated successfully");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to update post");
+    }
   };
 
   if (!post) return <div>Loading...</div>;

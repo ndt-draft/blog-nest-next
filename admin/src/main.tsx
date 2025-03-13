@@ -7,6 +7,7 @@ import PrivateLayout from "@/layouts/private";
 import PublicLayout from "@/layouts/public";
 import Logout from "@/components/Logout";
 import AsyncComponent from "@/components/AsyncComponent";
+import { Toaster } from "@/components/ui/sonner";
 
 const Login = AsyncComponent(() => import("@/components/Login"));
 const Posts = AsyncComponent(() => import("@/components/Posts"));
@@ -31,6 +32,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="logout" element={<Logout />} />
         </Route>
       </Routes>
+      <Toaster richColors />
     </BrowserRouter>
   </StrictMode>
 );

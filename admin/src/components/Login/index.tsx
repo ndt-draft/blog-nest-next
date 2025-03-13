@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router";
 import { handleLogin } from "@/api";
 import auth from "@/lib/auth";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -39,18 +40,15 @@ function Login(): React.JSX.Element {
 
   // 2. Define a submit handler.
   async function onSubmitForm(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    try {
-      const data = await handleLogin(values);
-
-      auth.set({ token: data.access_token });
-
-      // Handle successful login
-      navigate("/admin");
-    } catch (error) {
-      console.error(error);
-    }
+    toast.promise(handleLogin(values), {
+      loading: "Logging in...",
+      success: (data) => {
+        auth.set({ token: data.access_token });
+        navigate("/admin");
+        return "Logged in successfully";
+      },
+      error: "Failed to login",
+    });
   }
 
   return (
