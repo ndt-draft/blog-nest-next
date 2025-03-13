@@ -48,11 +48,12 @@ const PostTable = ({ posts }: Props) => {
               })}
             </TableCell>
             <TableCell>
-              {new Date(post.updated_at).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
+              {post.updated_at &&
+                new Date(post.updated_at).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
             </TableCell>
             <TableCell>
               <Link to={`/admin/posts/${post.id}/edit`}>Edit</Link>{" "}
