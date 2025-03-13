@@ -37,7 +37,7 @@ const Posts = () => {
       <Button className="cursor-pointer mb-4" asChild>
         <Link to="/admin/posts/new">Create New Post</Link>
       </Button>
-      <PostTable posts={data.posts} /> {/* Updated to PostTable */}
+      <PostTable posts={data.posts} />
       <Pagination className="mt-4">
         <PaginationContent>
           <PaginationPrevious

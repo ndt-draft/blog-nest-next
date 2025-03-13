@@ -24,7 +24,6 @@ const PostTable = ({ posts }: Props) => {
           <TableHead>Author</TableHead>
           <TableHead>Created At</TableHead>
           <TableHead>Updated At</TableHead>
-          <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -54,10 +53,6 @@ const PostTable = ({ posts }: Props) => {
                   month: "long",
                   day: "numeric",
                 })}
-            </TableCell>
-            <TableCell>
-              <Link to={`/admin/posts/${post.id}/edit`}>Edit</Link>{" "}
-              {/* Added Edit button */}
             </TableCell>
           </TableRow>
         ))}

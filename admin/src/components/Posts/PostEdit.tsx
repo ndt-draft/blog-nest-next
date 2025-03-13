@@ -19,7 +19,7 @@ const PostEdit = () => {
 
   const handleSubmit = async (data: UpdatePostDto) => {
     await updatePost(id!, data);
-    navigate(`/admin/posts/${id}`);
+    navigate(`/admin/posts`);
   };
 
   if (!post) return <div>Loading...</div>;
