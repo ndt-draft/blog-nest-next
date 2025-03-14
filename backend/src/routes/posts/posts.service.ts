@@ -106,7 +106,7 @@ export class PostsService {
     });
     let categories = [];
     if (createPostDto.categories) {
-      let categories = await this.categoryRepository.find({
+      categories = await this.categoryRepository.find({
         where: {
           id: In(createPostDto.categories),
         },

@@ -1,26 +1,29 @@
-import { useEffect, useState } from "react";
+import useSWR from "swr";
 import { useNavigate, useParams } from "react-router";
 import { getPost, updatePost } from "@/api/posts";
 import PostForm from "./PostForm";
 import { UpdatePostDto } from "@/types/post";
 import { toast } from "sonner";
+import { getCategories } from "@/api/categories";
+import { Category } from "@/types/category";
 
 const PostEdit = () => {
   const { id } = useParams<{ id: string }>();
-  const [post, setPost] = useState<UpdatePostDto | null>(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    async function fetchPost() {
-      const data = await getPost(id!);
-      setPost(data);
-    }
-    fetchPost();
-  }, [id]);
+  const {
+    data: post,
+    error: postError,
+    mutate: mutatePost,
+  } = useSWR(id ? `/posts/${id}` : null, () => getPost(id!));
+  const { data: categories = [], error: categoriesError } = useSWR(
+    "/categories",
+    getCategories
+  );
 
   const handleSubmit = async (data: UpdatePostDto) => {
     try {
       await updatePost(id!, data);
+      mutatePost(); // Revalidate the post data after update
       navigate(`/admin/posts`);
       toast.success("Post updated successfully");
     } catch (error: any) {
@@ -29,13 +32,23 @@ const PostEdit = () => {
   };
 
   if (!post) return <div>Loading...</div>;
+  if (postError || categoriesError) return <div>Failed to load data</div>;
 
   return (
     <div>
       <h1 className="text-3xl font-bold underline mb-4">
         Edit Post: {post.title}
       </h1>
-      <PostForm onSubmit={handleSubmit} defaultValues={post} />
+      <PostForm
+        onSubmit={handleSubmit}
+        defaultValues={{
+          ...post,
+          categories: post?.categories?.map(
+            (category: Category) => category.id
+          ),
+        }}
+        categories={categories}
+      />
     </div>
   );
 };
