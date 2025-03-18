@@ -45,7 +45,6 @@ jobs:
             --build-arg DB_PASS=${{ secrets.BACKEND_DB_PASS }} \
             --build-arg DB_NAME=${{ secrets.BACKEND_DB_NAME }} \
             --build-arg MONGODB_URI=${{ secrets.BACKEND_MONGODB_URI }} \
-            --output type=docker \
             ./backend
           docker tag backend $ECR_REGISTRY/backend:latest
           docker push $ECR_REGISTRY/backend:latest
