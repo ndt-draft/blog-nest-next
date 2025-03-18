@@ -1,0 +1,53 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches:
+      - main-backend
+
+env:
+  ECR_REGISTRY: ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+  ECS_CLUSTER: backend-cluster
+  BACKEND_SERVICE: backend-service
+
+permissions:
+  contents: read
+
+jobs:
+  deploy_backend:
+    name: Deploy Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Log in to Amazon ECR
+        run: |
+          aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.ECR_REGISTRY }}
+
+      - name: Build and Push Backend Image
+        run: |
+          cd backend
+          docker build -t your-backend-image \
+            --build-arg NODE_ENV=production \
+            --build-arg PORT=3333 \
+            --build-arg DB_HOST=${{ secrets.BACKEND_DB_HOST }} \
+            --build-arg DB_PORT=${{ secrets.BACKEND_DB_PORT }} \
+            --build-arg DB_USER=${{ secrets.BACKEND_DB_USER }} \
+            --build-arg DB_PASS=${{ secrets.BACKEND_DB_PASS }} \
+            --build-arg DB_NAME=${{ secrets.BACKEND_DB_NAME }} \
+            --build-arg MONGODB_URI=${{ secrets.BACKEND_MONGODB_URI }} \
+            ./backend
+          docker tag backend ${{ env.ECR_REGISTRY }}/backend:latest
+          docker push ${{ env.ECR_REGISTRY }}/backend:latest
+
+      - name: Deploy to ECS
+        run: |
+          aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.BACKEND_SERVICE }} --force-new-deployment
