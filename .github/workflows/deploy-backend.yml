@@ -34,9 +34,10 @@ jobs:
 
       - name: Build and Push Backend Image
         run: |
+          docker buildx create --use
           docker buildx build --platform linux/amd64 \
-            -t backend-image \
-            -f ./backend/Dockerfile \
+            -t $ECR_REGISTRY/backend:latest \
+            -f backend/Dockerfile \  # Specify the Dockerfile path explicitly
             --build-arg NODE_ENV=production \
             --build-arg PORT=3333 \
             --build-arg DB_HOST=${{ secrets.BACKEND_DB_HOST }} \
@@ -45,9 +46,8 @@ jobs:
             --build-arg DB_PASS=${{ secrets.BACKEND_DB_PASS }} \
             --build-arg DB_NAME=${{ secrets.BACKEND_DB_NAME }} \
             --build-arg MONGODB_URI=${{ secrets.BACKEND_MONGODB_URI }} \
-            ./backend
-          docker tag backend $ECR_REGISTRY/backend:latest
-          docker push $ECR_REGISTRY/backend:latest
+            --push \
+            backend/
 
       - name: Deploy to ECS
         run: |
