@@ -37,7 +37,7 @@ jobs:
           docker buildx create --use
           docker buildx build --platform linux/amd64 \
             -t $ECR_REGISTRY/backend:latest \
-            -f backend/Dockerfile \  # Specify the Dockerfile path explicitly
+            --file ./backend/Dockerfile \  # Correctly specify Dockerfile path
             --build-arg NODE_ENV=production \
             --build-arg PORT=3333 \
             --build-arg DB_HOST=${{ secrets.BACKEND_DB_HOST }} \
@@ -47,7 +47,7 @@ jobs:
             --build-arg DB_NAME=${{ secrets.BACKEND_DB_NAME }} \
             --build-arg MONGODB_URI=${{ secrets.BACKEND_MONGODB_URI }} \
             --push \
-            backend/
+            ./backend  # Set correct build context
 
       - name: Deploy to ECS
         run: |
