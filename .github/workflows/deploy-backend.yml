@@ -48,7 +48,7 @@ jobs:
             --build-arg DB_NAME=${{ secrets.BACKEND_DB_NAME }} \
             --build-arg MONGODB_URI=${{ secrets.BACKEND_MONGODB_URI }} \
             --push \
-            backend  # Set correct build context
+            --context ./backend  # Set correct build context
 
       - name: Deploy to ECS
         run: |
