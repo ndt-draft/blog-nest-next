@@ -32,10 +32,10 @@ jobs:
         run: |
           aws ecr get-login-password --region ${{ vars.AWS_REGION }} | docker login --username AWS --password-stdin $ECR_REGISTRY
 
-      - name: Build and Push Backend Image
+      - name: Build Backend Image
         run: |
-          cd backend
           docker buildx build -t backend \
+            -f backend/Dockerfile \
             --platform linux/amd64 \
             --build-arg NODE_ENV=production \
             --build-arg PORT=3333 \
@@ -45,7 +45,6 @@ jobs:
             --build-arg DB_PASS=${{ secrets.BACKEND_DB_PASS }} \
             --build-arg DB_NAME=${{ secrets.BACKEND_DB_NAME }} \
             --build-arg MONGODB_URI=${{ secrets.BACKEND_MONGODB_URI }} \
-            .
       - name: Push Backend Image
         run: |
           docker tag backend:latest $ECR_REGISTRY/backend:latest
