@@ -6,7 +6,7 @@ on:
       - main-backend
 
 env:
-  ECR_REGISTRY: ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+  ECR_REGISTRY: ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
   ECS_CLUSTER: backend-cluster
   BACKEND_SERVICE: backend-service
 
@@ -26,11 +26,11 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ vars.AWS_REGION }}
 
       - name: Log in to Amazon ECR
         run: |
-          aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.ECR_REGISTRY }}
+          aws ecr get-login-password --region ${{ vars.AWS_REGION }} | docker login --username AWS --password-stdin $ECR_REGISTRY
 
       - name: Build and Push Backend Image
         run: |
@@ -45,9 +45,9 @@ jobs:
             --build-arg DB_NAME=${{ secrets.BACKEND_DB_NAME }} \
             --build-arg MONGODB_URI=${{ secrets.BACKEND_MONGODB_URI }} \
             ./backend
-          docker tag backend ${{ env.ECR_REGISTRY }}/backend:latest
-          docker push ${{ env.ECR_REGISTRY }}/backend:latest
+          docker tag backend $ECR_REGISTRY/backend:latest
+          docker push $ECR_REGISTRY/backend:latest
 
       - name: Deploy to ECS
         run: |
-          aws ecs update-service --cluster ${{ env.ECS_CLUSTER }} --service ${{ env.BACKEND_SERVICE }} --force-new-deployment
+          aws ecs update-service --cluster $ECS_CLUSTER --service $BACKEND_SERVICE --force-new-deployment
