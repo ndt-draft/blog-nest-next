@@ -34,6 +34,7 @@ jobs:
 
       - name: Build and Push Backend Image
         run: |
+          cd backend
           docker buildx create --use
           docker buildx build --platform linux/amd64 \
             -t $ECR_REGISTRY/backend:latest \
@@ -48,8 +49,7 @@ jobs:
             --build-arg DB_NAME=${{ secrets.BACKEND_DB_NAME }} \
             --build-arg MONGODB_URI=${{ secrets.BACKEND_MONGODB_URI }} \
             --push \
-            --output type=image \
-            backend  # Corrected context
+            .
 
       - name: Deploy to ECS
         run: |
