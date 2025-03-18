@@ -34,6 +34,7 @@ jobs:
 
       - name: Build Backend Image
         run: |
+          ls backend
           docker buildx build -t backend -f backend/Dockerfile --build-arg NODE_ENV=production --build-arg PORT=3333 --build-arg DB_HOST=${{ secrets.BACKEND_DB_HOST }} --build-arg DB_PORT=${{ secrets.BACKEND_DB_PORT }} --build-arg DB_USER=${{ secrets.BACKEND_DB_USER }} --build-arg DB_PASS=${{ secrets.BACKEND_DB_PASS }} --build-arg DB_NAME=${{ secrets.BACKEND_DB_NAME }} --build-arg MONGODB_URI=${{ secrets.BACKEND_MONGODB_URI }} .
       - name: Push Backend Image
         run: |
