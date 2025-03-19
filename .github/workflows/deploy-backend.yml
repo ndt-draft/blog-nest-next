@@ -51,6 +51,7 @@ jobs:
             --build-arg DB_USER="${{ secrets.BACKEND_DB_USER }}" \
             --build-arg DB_PASS="${{ secrets.BACKEND_DB_PASS }}" \
             --build-arg DB_NAME="${{ secrets.BACKEND_DB_NAME }}" \
+            --build-arg DB_SSL="${{ vars.BACKEND_DB_SSL }}" \
             --build-arg MONGODB_URI="${{ secrets.BACKEND_MONGODB_URI }}" \
             --push \
             backend
