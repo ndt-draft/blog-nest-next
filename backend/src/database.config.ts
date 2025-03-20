@@ -14,6 +14,12 @@ export const migrationConfig: DataSourceOptions = {
   // Overrides
   synchronize: false, // disable in prod
   logging: false, // disable in prod
+  ssl:
+    process.env.DB_SSL === '1'
+      ? {
+          rejectUnauthorized: false,
+        }
+      : false,
 };
 
 export const getDatabaseConfig = (
@@ -31,4 +37,10 @@ export const getDatabaseConfig = (
   // Overrides
   synchronize: configService.get<boolean>('database.synchronize'), // disable in prod
   logging: configService.get<boolean>('database.logging'), // disable in prod
+  ssl:
+    process.env.DB_SSL === '1'
+      ? {
+          rejectUnauthorized: false,
+        }
+      : false,
 });

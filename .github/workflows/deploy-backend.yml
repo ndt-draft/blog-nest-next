@@ -1,0 +1,61 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches:
+      - main-backend
+
+env:
+  ECR_REGISTRY: ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
+  ECS_CLUSTER: backend-cluster-3
+  BACKEND_SERVICE: backend-service-6
+
+permissions:
+  contents: read
+
+jobs:
+  deploy_backend:
+    name: Deploy Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Log in to Amazon ECR
+        run: |
+          aws ecr get-login-password --region ${{ vars.AWS_REGION }} | docker login --username AWS --password-stdin $ECR_REGISTRY
+
+      - name: Ensure ECR Repository Exists
+        run: |
+          aws ecr describe-repositories --repository-names backend || \
+          aws ecr create-repository --repository-name backend
+
+      - name: Build Backend Image
+        run: |
+          docker buildx build --platform linux/amd64 \
+            -t $ECR_REGISTRY/backend:latest \
+            --build-arg NODE_ENV=production \
+            --build-arg PORT=3333 \
+            --build-arg DB_HOST="${{ secrets.BACKEND_DB_HOST }}" \
+            --build-arg DB_PORT="${{ secrets.BACKEND_DB_PORT }}" \
+            --build-arg DB_USER="${{ secrets.BACKEND_DB_USER }}" \
+            --build-arg DB_PASS="${{ secrets.BACKEND_DB_PASS }}" \
+            --build-arg DB_NAME="${{ secrets.BACKEND_DB_NAME }}" \
+            --build-arg DB_SSL="${{ vars.BACKEND_DB_SSL }}" \
+            --build-arg MONGODB_URI="${{ secrets.BACKEND_MONGODB_URI }}" \
+            --push \
+            backend
+
+      - name: Deploy to ECS
+        run: |
+          aws ecs update-service --cluster $ECS_CLUSTER --service $BACKEND_SERVICE --force-new-deployment
