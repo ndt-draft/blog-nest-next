@@ -7,8 +7,8 @@ on:
 
 env:
   ECR_REGISTRY: ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
-  ECS_CLUSTER: backend-cluster
-  BACKEND_SERVICE: backend-service
+  ECS_CLUSTER: backend-cluster-3
+  BACKEND_SERVICE: backend-service-6
 
 permissions:
   contents: read

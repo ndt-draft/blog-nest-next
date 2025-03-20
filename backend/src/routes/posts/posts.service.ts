@@ -202,7 +202,7 @@ export class PostsService {
 
     const updatedPost = await this.postRepository.save({ ...updateData, id });
 
-    const postMongo = await this.postModel.findOneAndUpdate(
+    let postMongo = await this.postModel.findOneAndUpdate(
       { post_id: id },
       {
         content,
@@ -211,6 +211,15 @@ export class PostsService {
         returnDocument: 'after',
       },
     );
+
+    // if not found, create a new one
+    if (!postMongo) {
+      postMongo = new this.postModel({
+        post_id: id,
+        content,
+      });
+      await postMongo.save();
+    }
 
     return {
       ...updatedPost,
