@@ -43,7 +43,7 @@ jobs:
 
       - name: ⚡ Deploy ISR & SSR to AWS Lambda
         run: |
-          cd frontend
+          cd frontend/.next/standalone
           npm install -g serverless
           serverless deploy
         env:

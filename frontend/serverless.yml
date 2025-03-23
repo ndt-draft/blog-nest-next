@@ -27,5 +27,4 @@ functions:
 package:
   individually: true
   patterns:
-    - "!node_modules/**" # ✅ Exclude unnecessary files
     - "!.next/cache/**" # ✅ Exclude build cache
