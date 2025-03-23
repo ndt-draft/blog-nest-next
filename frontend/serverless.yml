@@ -1,0 +1,32 @@
+service: nextjs-app
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-southeast-1
+  memorySize: 1024
+  timeout: 10
+  environment:
+    BUCKET_NAME: blog.comaytime.store
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:GetObject
+        - s3:PutObject
+      Resource: arn:aws:s3:::blog.comaytime.store/*
+
+functions:
+  nextJsSSR:
+    handler: .next/standalone/server.js
+    events:
+      - http:
+          path: "{proxy+}"
+          method: any
+          cors: true
+
+resources:
+  Resources:
+    NextAppBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: blog.comaytime.store

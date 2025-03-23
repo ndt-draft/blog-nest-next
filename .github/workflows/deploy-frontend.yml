@@ -1,0 +1,48 @@
+name: Deploy Frontend (Next.js to AWS S3 & Lambda)
+
+on:
+  push:
+    branches:
+      - main-frontend
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy Next.js
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛎️ Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Set Up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: 📦 Install Dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: 🔨 Build Next.js App
+        run: |
+          cd frontend
+          npm run build
+
+      - name: 🗂️ Upload SSG to S3
+        run: |
+          aws s3 sync frontend/.next/static s3://${{ vars.FRONTEND_S3_BUCKET_ID }}/_next/static --delete
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+
+      - name: ⚡ Deploy ISR & SSR to AWS Lambda
+        run: |
+          cd frontend
+          npm install -g serverless
+          serverless deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
