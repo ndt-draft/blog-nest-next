@@ -32,10 +32,13 @@ jobs:
           cd frontend
           npm run build
 
+      - name: Debug file location
+        run: ls -R
+
       - name: Move frontend.js and serverless.yml to standalone
         run: |
-          mv frontend.js .next/standalone/
-          mv serverless.yml .next/standalone/
+          mv ./frontend.js .next/standalone/
+          mv ./serverless.yml .next/standalone/
 
       - name: Copy aws-serverless-express to standalone node_modules
         run: cp -r node_modules/aws-serverless-express .next/standalone/node_modules/
