@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const standaloneDir = path.join(__dirname, "../.next/standalone");
-const filesToCopy = ["server.handler.js", "serverless.yml"];
+const filesToCopy = ["frontend.js", "serverless.yml"];
 
 // Ensure .next/standalone exists
 if (!fs.existsSync(standaloneDir)) {

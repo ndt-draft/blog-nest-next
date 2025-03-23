@@ -17,7 +17,7 @@ provider:
 
 functions:
   nextJsSSR:
-    handler: server.handler
+    handler: frontend
     events:
       - http:
           path: "{proxy+}"
