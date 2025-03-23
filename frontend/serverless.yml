@@ -23,10 +23,3 @@ functions:
           path: "{proxy+}"
           method: any
           cors: true
-
-resources:
-  Resources:
-    NextAppBucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: blog.comaytime.store
