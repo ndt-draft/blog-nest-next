@@ -32,11 +32,6 @@ jobs:
           cd frontend
           npm run build
 
-      - name: Install handler deps in standalone
-        run: |
-          cd frontend/.next/standalone
-          npm install aws-serverless-express --only=prod
-
       - name: Move frontend.js and serverless.yml to standalone
         run: |
           cd frontend
