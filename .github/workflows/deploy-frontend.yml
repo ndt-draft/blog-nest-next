@@ -5,6 +5,9 @@ on:
     branches:
       - main-frontend
 
+env:
+  SERVERLESS_ACCESS_KEY: ${{ secrets.FRONTEND_SERVERLESS_ACCESS_KEY }}
+
 jobs:
   build-and-deploy:
     name: Build & Deploy Next.js
