@@ -23,3 +23,12 @@ functions:
           path: "{proxy+}"
           method: any
           cors: true
+
+plugins:
+  - serverless-esbuild # ✅ Add esbuild plugin to optimize the bundle
+
+package:
+  individually: true
+  patterns:
+    - "!node_modules/**" # ✅ Exclude unnecessary files
+    - "!.next/cache/**" # ✅ Exclude build cache
