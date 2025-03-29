@@ -1,6 +1,5 @@
-service: nextjs-blog-app
-
-component: "@sls-next/serverless-component"
-inputs:
-  cloudfront:
-    distributionId: EHCDSJ6EITDZD
+nextjs-blog-app:
+  component: "@sls-next/serverless-component"
+  inputs:
+    cloudfront:
+      distributionId: EHCDSJ6EITDZD
