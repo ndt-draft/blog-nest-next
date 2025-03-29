@@ -35,12 +35,6 @@ jobs:
           cd frontend
           npm run build
 
-      - name: Move frontend.js and serverless.yml to standalone
-        run: |
-          cd frontend
-          mv frontend.js .next/standalone/
-          mv serverless.yml .next/standalone/
-
       - name: 🗂️ Upload SSG to S3
         run: |
           aws s3 sync frontend/.next/static s3://${{ vars.FRONTEND_S3_BUCKET_ID }}/_next/static --delete
@@ -48,7 +42,7 @@ jobs:
 
       - name: ⚡ Deploy ISR & SSR to AWS Lambda
         run: |
-          cd frontend/.next/standalone
+          cd frontend
           npm install -g serverless
           serverless deploy
 

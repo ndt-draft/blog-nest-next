@@ -16,24 +16,14 @@ provider:
         - s3:DeleteObject
       Resource: arn:aws:s3:::blog.comaytime.store/*
 
-plugins:
-  - serverless-nextjs
-
 custom:
   serverless-nextjs:
     assetsBucketName: blog.comaytime.store
     cloudfrontDistributionId: EHCDSJ6EITDZD
 
-functions:
-  nextJsSSR:
-    handler: frontend.handler
-    events:
-      - http:
-          path: "{proxy+}"
-          method: any
-          cors: true
-
 package:
   individually: true
   patterns:
     - "!.next/cache/**" # ✅ Exclude build cache
+
+component: "@sls-next/serverless-component"
