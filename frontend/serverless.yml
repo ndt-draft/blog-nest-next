@@ -18,6 +18,7 @@ provider:
 
 custom:
   serverless-nextjs:
+    component: "@sls-next/serverless-component"
     assetsBucketName: blog.comaytime.store
     cloudfrontDistributionId: EHCDSJ6EITDZD
 
@@ -26,4 +27,3 @@ package:
   patterns:
     - "!.next/cache/**" # ✅ Exclude build cache
 
-component: "@sls-next/serverless-component"
