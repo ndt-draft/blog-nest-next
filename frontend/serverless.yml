@@ -1,6 +1,59 @@
-component: "@sls-next/serverless-component"
-name: nextjs-blog-app
+service: nextjs-blog-app
 
-inputs:
-  cloudfront:
-    distributionId: EHCDSJ6EITDZD
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-southeast-1
+  memorySize: 2048
+  timeout: 30
+
+custom:
+  nextjs:
+    component: "@sls-next/serverless-component"
+    useServerlessTraceTarget: true
+    enableHTTPCompression: true
+    cloudfront:
+      api:
+        minTTL: 0
+        defaultTTL: 0
+        maxTTL: 31536000
+      dynamic:
+        minTTL: 0
+        defaultTTL: 0
+        maxTTL: 31536000
+
+resources:
+  Resources:
+    CloudFrontOriginAccessControl:
+      Type: AWS::CloudFront::OriginAccessControl
+      Properties:
+        OriginAccessControlConfig:
+          Name: blogS3-OAC
+          Description: OAC for S3 origin
+          SigningProtocol: sigv4
+          SigningBehavior: always
+          OriginAccessControlOriginType: s3
+    NextJSDistribution:
+      Type: AWS::CloudFront::Distribution
+      Properties:
+        DistributionConfig:
+          Enabled: true
+          Aliases:
+            - blog.comaytime.store
+          PriceClass: PriceClass_100
+          ViewerCertificate:
+            AcmCertificateArn: arn:aws:acm:us-east-1:818201360205:certificate/162fb8d0-9c2a-42c7-be23-e7eda4c13504
+            SslSupportMethod: sni-only # 👈 Required for ACM certificates
+          # Required DefaultCacheBehavior configuration
+          DefaultCacheBehavior:
+            TargetOriginId: blogS3
+            ViewerProtocolPolicy: redirect-to-https
+            ForwardedValues:
+              QueryString: true
+              Cookies:
+                Forward: none
+          Origins:
+            - Id: blogS3
+              DomainName: blog.comaytime.store.s3.ap-southeast-1.amazonaws.com
+              S3OriginConfig: {}
+              OriginAccessControlId: !Ref CloudFrontOriginAccessControl
