@@ -7,6 +7,9 @@ on:
 
 env:
   SERVERLESS_ACCESS_KEY: ${{ secrets.FRONTEND_SERVERLESS_ACCESS_KEY }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: ${{ vars.AWS_REGION }}
 
 jobs:
   build-and-deploy:
@@ -42,17 +45,13 @@ jobs:
         run: |
           aws s3 sync frontend/.next/static s3://${{ vars.FRONTEND_S3_BUCKET_ID }}/_next/static --delete
           aws s3 sync frontend/public s3://${{ vars.FRONTEND_S3_BUCKET_ID }}
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ vars.AWS_REGION }}
 
       - name: ⚡ Deploy ISR & SSR to AWS Lambda
         run: |
           cd frontend/.next/standalone
           npm install -g serverless
           serverless deploy
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ vars.AWS_REGION }}
+
+      - name: 🚀 Invalidate CloudFront Cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ vars.FRONTEND_CLOUDFRONT_ID }} --paths "/*"

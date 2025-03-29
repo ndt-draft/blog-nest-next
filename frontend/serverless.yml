@@ -13,7 +13,16 @@ provider:
       Action:
         - s3:GetObject
         - s3:PutObject
+        - s3:DeleteObject
       Resource: arn:aws:s3:::blog.comaytime.store/*
+
+plugins:
+  - serverless-nextjs
+
+custom:
+  serverless-nextjs:
+    assetsBucketName: blog.comaytime.store
+    cloudfrontDistributionId: EHCDSJ6EITDZD
 
 functions:
   nextJsSSR:

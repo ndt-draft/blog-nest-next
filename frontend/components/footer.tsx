@@ -1,6 +1,8 @@
 import Image from "next/image";
 import LogInOut from "./LogInOut";
 
+const assetsPrefix = process.env.NEXT_PUBLIC_ASSETS_PREFIX || "";
+
 const Footer: React.FC = () => {
   return (
     <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center mb-8">
@@ -21,7 +23,7 @@ const Footer: React.FC = () => {
       >
         <Image
           aria-hidden
-          src="/window.svg"
+          src={`${assetsPrefix}/window.svg`}
           alt="Window icon"
           width={16}
           height={16}
@@ -36,7 +38,7 @@ const Footer: React.FC = () => {
       >
         <Image
           aria-hidden
-          src="/globe.svg"
+          src={`${assetsPrefix}/globe.svg`}
           alt="Globe icon"
           width={16}
           height={16}
