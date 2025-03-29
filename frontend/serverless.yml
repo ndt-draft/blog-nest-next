@@ -1,4 +1,4 @@
-nextjs-blog-app:
+nextjsBlogApp:
   component: "@sls-next/serverless-component"
   inputs:
     cloudfront:
