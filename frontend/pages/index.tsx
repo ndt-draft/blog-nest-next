@@ -1,5 +1,5 @@
 import { Post } from "@/types/post";
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 import PostList from "@/components/PostList";
 import { fetchPosts } from "@/api";
 import PageTitle from "@/components/PageTitle";
@@ -13,7 +13,7 @@ export default function Home({ posts }: { posts: Post[] }) {
   );
 }
 
-export const getServerSideProps = (async () => {
+export const getStaticProps = (async () => {
   // Fetch data from external API
   const res = await fetchPosts();
 
@@ -24,5 +24,7 @@ export const getServerSideProps = (async () => {
   const { posts } = await res.json();
 
   // Pass data to the page via props
-  return { props: { posts } };
-}) satisfies GetServerSideProps;
+  return { props: { posts }, revalidate: 10 };
+}) satisfies GetStaticProps<{
+  posts: Post[];
+}>;
