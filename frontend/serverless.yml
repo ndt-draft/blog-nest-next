@@ -1,0 +1,30 @@
+service: nextjs-app
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-southeast-1
+  memorySize: 2048
+  timeout: 30
+  environment:
+    STATIC_BUCKET_NAME: blog.comaytime.store
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:GetObject
+        - s3:PutObject
+      Resource: arn:aws:s3:::blog.comaytime.store/*
+
+functions:
+  nextJsSSR:
+    handler: frontend.handler
+    events:
+      - http:
+          path: "{proxy+}"
+          method: any
+          cors: true
+
+package:
+  individually: true
+  patterns:
+    - "!.next/cache/**" # ✅ Exclude build cache
