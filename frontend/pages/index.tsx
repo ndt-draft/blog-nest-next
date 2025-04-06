@@ -22,8 +22,7 @@ export default function Home({
   pagination: PostPagination;
   page: number;
 }) {
-  // const totalPages = Math.ceil(pagination.total / pagination.limit);
-  const totalPages = 100;
+  const totalPages = Math.ceil(pagination.total / pagination.limit);
   const maxVisiblePages = 5; // Maximum number of visible pages
   const startPage = Math.max(1, page - Math.floor(maxVisiblePages / 2));
   const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
