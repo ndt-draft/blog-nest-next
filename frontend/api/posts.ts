@@ -1,6 +1,6 @@
 import { apiFetch } from "./fetch";
 
-type PostsParams = { category?: string };
+type PostsParams = { category?: string; page?: number; limit?: number };
 
 export const fetchPosts = (params?: PostsParams) => {
   return apiFetch("/posts", { params });
