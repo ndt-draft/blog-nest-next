@@ -6,3 +6,9 @@ export type Post = {
   content: string;
   categories: Category[];
 };
+
+export type PostPagination = {
+  total: number;
+  page: number;
+  limit: number;
+};
