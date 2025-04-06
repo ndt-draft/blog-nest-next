@@ -1,14 +1,30 @@
-import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
+import type {
+  InferGetStaticPropsType,
+  GetStaticProps,
+  GetStaticPaths,
+} from "next";
 import { Category } from "@/types/category";
 import { Post } from "@/types/post";
 import PostList from "@/components/PostList";
-import { fetchCategory, fetchPosts } from "@/api";
+import { fetchCategories, fetchCategory, fetchPosts } from "@/api";
 import PageTitle from "@/components/PageTitle";
 
-export const getServerSideProps = (async ({ params }) => {
+export const getStaticPaths: GetStaticPaths = async () => {
+  // Fetch all categories to pre-generate paths
+  const res = await fetchCategories();
+  const categories: Category[] = await res.json();
+
+  const paths = categories.map((category) => ({
+    params: { id: category.id.toString() },
+  }));
+
+  return { paths, fallback: true };
+};
+
+export const getStaticProps = (async ({ params }) => {
   // Fetch data from external API
   const res = await Promise.all([
-    fetchCategory(params?.id),
+    fetchCategory(params?.id), // Pass params to fetchCategory
     fetchPosts({ category: params?.id }),
   ]);
 
@@ -20,8 +36,8 @@ export const getServerSideProps = (async ({ params }) => {
   const { posts } = await res[1].json();
 
   // Pass data to the page via props
-  return { props: { category, posts } };
-}) satisfies GetServerSideProps<
+  return { props: { category, posts }, revalidate: 10 };
+}) satisfies GetStaticProps<
   { category: Category; posts: Post[] },
   { id: string }
 >;
@@ -29,12 +45,11 @@ export const getServerSideProps = (async ({ params }) => {
 export default function Page({
   category,
   posts,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
-      <PageTitle>Category: {category.name}</PageTitle>
-
-      <PostList posts={posts} />
+      <PageTitle>Category: {category?.name}</PageTitle>
+      <PostList posts={posts || []} />
     </>
   );
 }

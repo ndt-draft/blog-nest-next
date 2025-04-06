@@ -15,6 +15,7 @@ import { Category } from './routes/categories/entities/category.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
+import { AppController } from './app.controller'; // Import AppController
 
 @Module({
   imports: [
@@ -31,7 +32,7 @@ import configuration from './config/configuration';
     CommentsModule,
     TypeOrmModule.forFeature([User, Post, Category]), // Register entities here
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_GUARD,
