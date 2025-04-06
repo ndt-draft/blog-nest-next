@@ -10,6 +10,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
+  PaginationEllipsis,
 } from "@/components/ui/pagination";
 
 export default function Home({
@@ -21,7 +22,12 @@ export default function Home({
   pagination: PostPagination;
   page: number;
 }) {
-  const totalPages = Math.ceil(pagination.total / pagination.limit);
+  // const totalPages = Math.ceil(pagination.total / pagination.limit);
+  const totalPages = 100;
+  const maxVisiblePages = 5; // Maximum number of visible pages
+  const startPage = Math.max(1, page - Math.floor(maxVisiblePages / 2));
+  const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
   return (
     <>
       <PageTitle>Posts</PageTitle>
@@ -35,16 +41,41 @@ export default function Home({
               />
             </PaginationItem>
           )}
-          {[...Array(totalPages)].map((_, index) => (
-            <PaginationItem>
-              <PaginationLink
-                href={`/?page=${index + 1}&limit=${pagination.limit}`}
-                isActive={page - 1 === index}
-              >
-                {index + 1}
-              </PaginationLink>
-            </PaginationItem>
-          ))}
+          {startPage > 1 && (
+            <>
+              <PaginationItem>
+                <PaginationLink href={`/?page=1&limit=${pagination.limit}`}>
+                  1
+                </PaginationLink>
+              </PaginationItem>
+              {startPage > 2 && <PaginationEllipsis />}
+            </>
+          )}
+          {[...Array(endPage - startPage + 1)].map((_, index) => {
+            const currentPage = startPage + index;
+            return (
+              <PaginationItem key={currentPage}>
+                <PaginationLink
+                  href={`/?page=${currentPage}&limit=${pagination.limit}`}
+                  isActive={page === currentPage}
+                >
+                  {currentPage}
+                </PaginationLink>
+              </PaginationItem>
+            );
+          })}
+          {endPage < totalPages && (
+            <>
+              {endPage < totalPages - 1 && <PaginationEllipsis />}
+              <PaginationItem>
+                <PaginationLink
+                  href={`/?page=${totalPages}&limit=${pagination.limit}`}
+                >
+                  {totalPages}
+                </PaginationLink>
+              </PaginationItem>
+            </>
+          )}
           {page + 1 <= totalPages && (
             <PaginationItem>
               <PaginationNext
