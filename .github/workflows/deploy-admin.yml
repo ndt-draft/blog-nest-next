@@ -1,0 +1,37 @@
+name: Deploy Admin to Netlify
+
+on:
+  push:
+    branches:
+      - main-admin
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛎️ Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: 📦 Install Dependencies
+        run: |
+          cd admin
+          npm install
+
+      - name: 🚀 Install Netlify CLI
+        run: npm install -g netlify-cli
+
+      - name: 🔨 Build Vite Project
+        run: |
+          cd admin
+          npm run build
+
+      - name: 🌍 Deploy to Netlify
+        run: netlify deploy --prod --site ${{ secrets.ADMIN_NETLIFY_SITE_ID }} --dir=admin/dist
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.ADMIN_NETLIFY_AUTH_TOKEN }}
