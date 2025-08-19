@@ -1,5 +1,5 @@
 import { Post, PostPagination } from "@/types/post";
-import { GetStaticProps } from "next";
+import { GetStaticProps, GetStaticPaths } from "next";
 import PostList from "@/components/PostList";
 import { fetchPosts } from "@/api";
 import PageTitle from "@/components/PageTitle";
@@ -13,7 +13,7 @@ import {
   PaginationEllipsis,
 } from "@/components/ui/pagination";
 
-export default function Home({
+export default function Page({
   posts,
   pagination,
   page,
@@ -88,12 +88,13 @@ export default function Home({
   );
 }
 
-export const getStaticProps = (async () => {
-  const page = 1; // Default to the first page
+export const getStaticProps: GetStaticProps = async (context) => {
+  const { page } = context.params || {};
+  const currentPage = parseInt(page as string, 10) || 1;
   const limit = 10; // Default limit
 
   // Fetch data from external API
-  const res = await fetchPosts({ page: page - 1, limit });
+  const res = await fetchPosts({ page: currentPage - 1, limit });
 
   if (!res.ok) {
     return { notFound: true };
@@ -102,9 +103,26 @@ export const getStaticProps = (async () => {
   const { posts, pagination } = await res.json();
 
   // Pass data to the page via props
-  return { props: { posts, pagination, page } };
-}) satisfies GetStaticProps<{
-  posts: Post[];
-  pagination: PostPagination;
-  page: number;
-}>;
+  return { props: { posts, pagination, page: currentPage } };
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const limit = 10; // Default limit
+
+  // Fetch the total number of posts to calculate the number of pages
+  const res = await fetchPosts({ page: 0, limit });
+
+  if (!res.ok) {
+    return { paths: [], fallback: false };
+  }
+
+  const { pagination } = await res.json();
+  const totalPages = Math.ceil(pagination.total / pagination.limit);
+
+  // Generate paths for each page
+  const paths = Array.from({ length: totalPages }, (_, index) => ({
+    params: { page: (index + 1).toString() },
+  }));
+
+  return { paths, fallback: false };
+};

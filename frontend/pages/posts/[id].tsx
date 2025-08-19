@@ -12,19 +12,28 @@ import PageTitle from "@/components/PageTitle";
 import CommentsProvider from "@/components/CommentsProvider";
 
 export const getStaticPaths = (async () => {
-  // Call an external API endpoint to get posts
-  const res = await fetchPosts();
-  const data = await res.json();
+  let allPosts: Post[] = [];
+  let currentPage = 0;
+  const limit = 10; // Adjust the limit based on your API's pagination
 
-  // Get the paths we want to prerender based on posts
-  // In production environments, prerender all pages
-  // (slower builds, but faster initial page load)
-  const paths = data.posts.map((post: Post) => ({
+  while (true) {
+    const res = await fetchPosts({ page: currentPage, limit });
+    const data = await res.json();
+
+    allPosts = allPosts.concat(data.posts);
+
+    if (data.posts.length < limit) {
+      break; // Exit the loop if there are no more posts
+    }
+
+    currentPage++;
+  }
+
+  const paths = allPosts.map((post: Post) => ({
     params: { id: `${post.id}` },
   }));
 
-  // { fallback: false } means other routes should 404
-  return { paths, fallback: true };
+  return { paths, fallback: false };
 }) satisfies GetStaticPaths;
 
 export const getStaticProps = (async ({ params }) => {
@@ -37,7 +46,7 @@ export const getStaticProps = (async ({ params }) => {
   }
 
   const post = await res.json();
-  return { props: { post }, revalidate: 10 };
+  return { props: { post } };
 }) satisfies GetStaticProps<{
   post: Post;
 }>;

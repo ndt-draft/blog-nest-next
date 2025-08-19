@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: true,
-  output: "standalone", // Required for AWS Lambda
+  output: "export", // Required for AWS Lambda
   images: {
     unoptimized: true, // Disable Next.js image optimization (use S3 instead)
   },

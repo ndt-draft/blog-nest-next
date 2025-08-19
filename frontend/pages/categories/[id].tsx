@@ -18,7 +18,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     params: { id: category.id.toString() },
   }));
 
-  return { paths, fallback: true };
+  return { paths, fallback: false };
 };
 
 export const getStaticProps = (async ({ params }) => {
@@ -36,7 +36,7 @@ export const getStaticProps = (async ({ params }) => {
   const { posts } = await res[1].json();
 
   // Pass data to the page via props
-  return { props: { category, posts }, revalidate: 10 };
+  return { props: { category, posts } };
 }) satisfies GetStaticProps<
   { category: Category; posts: Post[] },
   { id: string }
